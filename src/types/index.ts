@@ -9,8 +9,8 @@ export enum Mode {
   export enum SENSOR_LEVEL {
     "Excellent" = "Excellent",
     "Good" = "Good",
-    "Surpass" = "Surpass",
-    "Invalid" ="Invalid"
+    "Exceeding" = "Exceeding",
+    "Invalid" ="Invalid",
 }
 
 export enum SENSOR_CHART_TYPE {
@@ -21,3 +21,86 @@ export enum SENSOR_CHART_TYPE {
 
 
 export type FloorConfigKey = keyof typeof Floor_Config;
+
+
+
+export interface TaskDetailResponseType {
+  id: number;
+  taskId: string;
+  data: string;
+  createdAt: string;
+  deviceId: string;
+  reportUrl: string;
+  buildingStructureId: string;
+  status: number;
+  task: Task;
+}
+
+export interface Task {
+  id: number;
+  taskId: string;
+  created: string;
+  inspectItem: string[];
+  taskTitle: string;
+  status: number;
+  inspectArea: string[];
+  mode: string;
+  userDefineArea: number[][];
+  deviceId: string;
+  setDate: string;
+  setTime: string;
+  informPerson: string[]
+  enable: boolean;
+  isSendEmail: boolean;
+  createdAt: string;
+  inspectImg: InspectImg;
+}
+
+export type InspectImg = {
+  [key: string]: SensorResultImgType[];
+}
+
+export interface SensorResultImgType {
+  id: number;
+  taskId: string;
+  imgUrl: string;
+  inspectType: number;
+  floor: number;
+  area: number;
+  spot: number;
+  createdAt: string;
+}
+
+export interface BsSingleData {
+  floor: number;
+  spot: number;
+  area: number;
+  detectionArea: number;
+  buildNumber: number;
+  buildQualifiedNumber: number;
+  buildUnqualifiedNumber: number;
+  buildQualifiedRate: number;
+}
+
+export interface IAQSingleData {
+  floor: number;
+  area: number;
+  spot: number;
+  taskId: string;
+  temperature: number;
+  humidity: number;
+  airflow: number;
+  co2: number;
+  co: number;
+  o3: number;
+  tvoc: number;
+  pm2_5: number;
+  pm10: number;
+  no2: number;
+  hcho: number;
+  rn: number;
+  lux: number;
+  noise: number;
+}
+
+

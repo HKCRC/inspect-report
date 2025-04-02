@@ -1,51 +1,13 @@
-import { Divider } from "antd";
-import { useState } from "react";
-import { ScrollableTabs } from "../scroll-tab";
-
 export default function PhysicalInfo() {
-  const [activeTab, setActiveTab] = useState("tab1");
-
-  const tabs = [
-    { id: "tab1", label: "1F" },
-    { id: "tab2", label: "2F" },
-    { id: "tab3", label: "3F" },
-    { id: "tab4", label: "4F" },
-    { id: "tab5", label: "5F" },
-  ];
-
-  const handleTabChange = (tabId: string | number) => {
-    console.log("Tab changed:", tabId);
-    setActiveTab(tabId.toString());
-    // 这里可以执行其他操作，比如更新内容、导航等
-  };
-
   return (
     <div>
-      <div className="w-full max-w-[450px] mx-5">
-        <ScrollableTabs
-          tabs={tabs}
-          activeTab={activeTab}
-          onTabChange={handleTabChange}
-          visibleTabs={4} // 固定显示4个tab
-        />
-      </div>
-
-      <Divider
-        style={{
-          marginLeft: 0,
-          marginRight: 0,
-          marginBottom: 30,
-          marginTop: 5,
-        }}
-      />
-
       <div className="container flex flex-row justify-between gap-4 px-8">
         <div className="flex flex-col mr-16">
           <p className="text-lg font-bold">
             Other Physical <br />
             Parameters
           </p>
-          <span className="w-20 h-2 mt-1 bg-[#0052D9] "></span>
+          <span className="w-20 h-1.5 mt-1 bg-[#0052D9] "></span>
 
           <div className="flex flex-col gap-2 mt-8">
             <div className="flex flex-row items-center">

@@ -9,12 +9,14 @@ interface ChartProps {
   title: string;
   data: { [key: string]: number | string };
   type: SENSOR_CHART_TYPE;
+  isShowUnStandard?: boolean;
 }
 
 export const Chart = ({
   title,
   data,
   type = SENSOR_CHART_TYPE["IAQ Parameters"],
+  isShowUnStandard = false,
 }: ChartProps) => {
   const [state, setState] = useState({
     series: [
@@ -25,15 +27,6 @@ export const Chart = ({
     ],
     options: {},
   });
-
-  //   const [renderedValue, setRenderedValue] = useState<
-  //     | {
-  //         renderedValue: number;
-  //         originalValue: number;
-  //         range: SENSOR_LEVEL | undefined;
-  //       }[]
-  //     | null
-  //   >(null);
 
   const calculateHeight = (data: { [key: string]: number | string }) => {
     let parameterData = null;
@@ -54,12 +47,78 @@ export const Chart = ({
           Number(parameterData),
           [item.standard.Excellent.start, item.standard.Excellent.end],
           [item.standard.Good.start, item.standard.Good.end],
-          item.name
+          item.name,
+          isShowUnStandard
         );
         allResult.push(result);
       }
     });
     return allResult;
+  };
+
+  const renderStandardYaxis = () => {
+    if (isShowUnStandard) {
+      return [
+        {
+          y: 0,
+          y2: 30,
+          borderColor: "#FFE4E4",
+          fillColor: "#FFE4E4",
+          opacity: 0.3,
+          width: "100%",
+        },
+        {
+          y: 30,
+          y2: 60,
+          borderColor: "#E4EFFF",
+          fillColor: "#E4EFFF",
+          opacity: 0.3,
+          width: "100%",
+        },
+        {
+          y: 60,
+          y2: 100,
+          borderColor: "#FFF2E4",
+          fillColor: "#FFF2E4",
+          opacity: 0.3,
+          width: "100%",
+        },
+        {
+          y: 100,
+          y2: 120,
+          borderColor: "#FFE4E4",
+          fillColor: "#FFE4E4",
+          opacity: 0.3,
+          width: "100%",
+        },
+      ];
+    }
+    return [
+      {
+        y: 0,
+        y2: 60,
+        borderColor: "#E4EFFF",
+        fillColor: "#E4EFFF",
+        opacity: 0.3,
+        width: "100%",
+      },
+      {
+        y: 60,
+        y2: 100,
+        borderColor: "#FFF2E4",
+        fillColor: "#FFF2E4",
+        opacity: 0.3,
+        width: "100%",
+      },
+      {
+        y: 100,
+        y2: 120,
+        borderColor: "#FFE4E4",
+        fillColor: "#FFE4E4",
+        opacity: 0.3,
+        width: "100%",
+      },
+    ];
   };
 
   const getSeriesData = () => {
@@ -99,7 +158,7 @@ export const Chart = ({
 
   useEffect(() => {
     const chartData = getSeriesData();
-    console.error(chartData);
+
     setState({
       series: chartData.series,
       options: {
@@ -116,39 +175,14 @@ export const Chart = ({
               return "#7DB1FF";
             case "Good":
               return "#FFB362";
-            case "Surpass":
+            case "Exceeding":
               return "#FC9090";
             default:
               return "#999999"; // 默认颜色
           }
         }),
         annotations: {
-          yaxis: [
-            {
-              y: 0,
-              y2: 60,
-              borderColor: "#E4EFFF",
-              fillColor: "#E4EFFF",
-              opacity: 0.3,
-              width: "100%",
-            },
-            {
-              y: 60,
-              y2: 100,
-              borderColor: "#FFF2E4",
-              fillColor: "#FFF2E4",
-              opacity: 0.3,
-              width: "100%",
-            },
-            {
-              y: 100,
-              y2: 120,
-              borderColor: "#FFE4E4",
-              fillColor: "#FFE4E4",
-              opacity: 0.3,
-              width: "100%",
-            },
-          ],
+          yaxis: renderStandardYaxis(),
         },
         plotOptions: {
           bar: {
@@ -235,11 +269,11 @@ export const Chart = ({
                 };
               }) => {
                 const seriesName = opts.w.globals.seriesNames[opts.seriesIndex];
-                if (seriesName === "Excellent") {
+                if (seriesName === SENSOR_LEVEL.Excellent) {
                   return "#7DB1FF";
-                } else if (seriesName === "Good") {
+                } else if (seriesName === SENSOR_LEVEL.Good) {
                   return "#FFB362";
-                } else if (seriesName === "Surpass") {
+                } else if (seriesName === SENSOR_LEVEL.Exceeding) {
                   return "#FC9090";
                 }
                 return "#000000";
@@ -345,10 +379,10 @@ export const Chart = ({
   }, []);
 
   return (
-    <div className="mt-8 relative">
+    <div className="relative">
       <div className="absolute top-5 left-0">
         <p className="text-lg font-bold">{title}</p>
-        <div className="w-20 h-2 mt-1 bg-[#0052D9]"></div>
+        <div className="w-20 h-1.5 mt-1 bg-[#0052D9]"></div>
       </div>
 
       <ApexCharts

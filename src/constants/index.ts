@@ -9,27 +9,54 @@ import point1Png from "../assets/area/point1.png";
 import point2Png from "../assets/area/point2.png";
 import point3Png from "../assets/area/point3.png";
 
-
+export const API_URL = "http://129.226.138.87:7002"
 
 export const CHART_CATEGORY_CONFIG = {
     [SENSOR_CHART_TYPE["Physical Parameters"]]: [
         {
             name: "Temperatre",
-            unit: "℃",
+            unit: "°C",
             key: "temperature",
-            standard: undefined,
+            standard: {
+                Excellent: {
+                    start: 20,
+                    end: 23,
+                },
+                Good: {
+                    start: 19,
+                    end: 20,
+                }
+            },
         },
         {
-            name: "Humidity",
+            name: "Humidity",   
             unit: "%",
             key: "humidity",
-            standard: undefined,
+            standard: {
+                Excellent: {
+                    start: 40,
+                    end: 60,
+                },
+                Good: {
+                    start: 30,
+                    end: 40,
+                }
+            },
         },
         {
             name: "Air Flow",
             unit: "m³/s",
             key: "airflow",
-            standard: undefined,
+            standard: {
+                Excellent: {
+                    start: 0.05,
+                    end: 0.1,
+                },
+                Good: {
+                    start: 0.1,
+                    end: 0.15,
+                }
+            },
         }
     ],
     [SENSOR_CHART_TYPE["IAQ Parameters"]]: [
@@ -183,12 +210,12 @@ export const CHART_CATEGORY_CONFIG = {
             key: "noise",
             standard: {
                 [SENSOR_LEVEL.Excellent]: {
-                    start: 300,
-                    end: 500,
+                    start: 0,
+                    end: 35,
                 },
                 [SENSOR_LEVEL.Good]: {
-                    start: 200,
-                    end: 300,
+                    start: 35,
+                    end: 45,
                 },
             },
         }

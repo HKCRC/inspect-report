@@ -131,7 +131,7 @@ export const ScrollableTabs: React.FC<ScrollableTabsProps> = ({
           <div key={tab.id} className="flex items-center">
             <button
               key={tab.id}
-              className={`px-3 py-1 whitespace-nowrap font-medium text-sm transition-colors duration-200 relative flex-1 text-center
+              className={`px-5 py-1 whitespace-nowrap font-medium text-sm transition-colors duration-200 relative flex-1 text-center
               ${
                 currentTab === tab.id
                   ? "text-blue-600 font-semibold"

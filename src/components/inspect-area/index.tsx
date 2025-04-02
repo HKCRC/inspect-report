@@ -67,7 +67,7 @@ export const InspectAreaView = () => {
   };
 
   return (
-    <Flex className="relative mt-5 min-h-96 rounded-3xl bg-[#f9f9f9] h-full">
+    <Flex className="relative mt-5 min-h-54 rounded-3xl bg-[#f9f9f9] h-full">
       {currentShowArea.length ? (
         currentShowArea.map((item) => (
           <motion.img

@@ -9,7 +9,8 @@ export default function ReportHeader() {
           className="flex flex-col justify-center max-w-[75%] overflow-hidden"
         >
           <span className="text-3xl font-bold">
-            2F-Parking Area Environment Repot
+            2F-Parking Area <br />
+            Environment Repot
           </span>
 
           <span className="text-md text-gray-500 mt-5 mb-1">
@@ -26,7 +27,7 @@ export default function ReportHeader() {
 
           <div
             data-module="inspection-tags-list"
-            className="flex gap-1 flex-wrap"
+            className="flex gap-2 flex-wrap"
           >
             <Tag
               style={{ padding: "8px 15px", borderRadius: "6px" }}
@@ -97,7 +98,12 @@ export default function ReportHeader() {
           </div>
         </div>
 
-        <Button size="large" type="primary" className="ml-4">
+        <Button
+          size="large"
+          type="primary"
+          style={{ backgroundColor: "#0052D9" }}
+          className="ml-4"
+        >
           Report Download
         </Button>
       </div>
