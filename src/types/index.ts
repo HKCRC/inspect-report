@@ -20,8 +20,37 @@ export enum SENSOR_CHART_TYPE {
 }
 
 
+export interface TaskType {
+  id: number
+  taskId: string
+  created: string
+  inspectItem: string[]
+  taskTitle: string
+  status: number
+  inspectArea: string[]
+  mode: string
+  userDefineArea: number[][],
+  deviceId: string
+  setDate: string
+  setTime: string
+  informPerson: unknown[]
+  enable: boolean
+  createdAt: string
+  Collection: unknown[]
+}
+
 export type FloorConfigKey = keyof typeof Floor_Config;
 
+
+export type inspectItemOriginNode = {
+  id: string;
+  key: string;
+  title: string;
+  value: string;
+  isShowParent?: boolean,
+  color?: string
+  children?: inspectItemOriginNode[]; // 直接递归引用自身类型
+};
 
 
 export interface TaskDetailResponseType {
@@ -104,3 +133,11 @@ export interface IAQSingleData {
 }
 
 
+
+
+export interface AfterCalculatedData {
+  renderedValue: number;
+  originalValue: number;
+  range: SENSOR_LEVEL | undefined;
+  title: string;
+}

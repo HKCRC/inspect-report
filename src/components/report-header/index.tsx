@@ -1,6 +1,26 @@
-import { Button, Tag } from "antd";
+import { Button } from "antd";
+import { inspectItemOriginNode, Task } from "../../types";
+import { useCallback } from "react";
+import { getFilteredParentObjects } from "../../utils";
+import { TagsContainer } from "../tags-container";
+import { Task_Building_Config } from "../../constants";
 
-export default function ReportHeader() {
+interface ReportHeaderProps {
+  info: Task;
+}
+
+export default function ReportHeader({ info }: ReportHeaderProps) {
+  const renderProjectItems = useCallback((inspectItem: string[]) => {
+    if (inspectItem) {
+      const getInspectItems: inspectItemOriginNode[] = getFilteredParentObjects(
+        inspectItem,
+        Task_Building_Config
+      );
+
+      return <TagsContainer inspectItems={getInspectItems} />;
+    }
+  }, []);
+
   return (
     <div data-module="header">
       <div className="flex items-start pt-8 justify-between">
@@ -9,16 +29,19 @@ export default function ReportHeader() {
           className="flex flex-col justify-center max-w-[75%] overflow-hidden"
         >
           <span className="text-3xl font-bold">
-            2F-Parking Area <br />
+            {info?.inspectArea.join(", ")}-Parking Area <br />
             Environment Repot
           </span>
 
           <span className="text-md text-gray-500 mt-5 mb-1">
-            Date: 2025-03-31
+            Date:{" "}
+            {new Date(info?.setTime).toDateString() +
+              " " +
+              new Date(info?.setTime).toLocaleTimeString()}
           </span>
 
           <span className="text-md text-gray-500">
-            Building: 2F-Parking Area
+            Building: {info?.inspectArea.join(", ")} -Parking Area
           </span>
 
           <span className="text-xl mt-6 mb-4 font-extrabold text-gray-500">
@@ -29,72 +52,7 @@ export default function ReportHeader() {
             data-module="inspection-tags-list"
             className="flex gap-2 flex-wrap"
           >
-            <Tag
-              style={{ padding: "8px 15px", borderRadius: "6px" }}
-              color="magenta"
-            >
-              Luxury
-            </Tag>
-            <Tag
-              style={{ padding: "8px 15px", borderRadius: "6px" }}
-              color="red"
-            >
-              Safety
-            </Tag>
-            <Tag
-              style={{ padding: "8px 15px", borderRadius: "6px" }}
-              color="volcano"
-            >
-              Environment
-            </Tag>
-            <Tag
-              style={{ padding: "8px 15px", borderRadius: "6px" }}
-              color="orange"
-            >
-              Health
-            </Tag>
-            <Tag
-              style={{ padding: "8px 15px", borderRadius: "6px" }}
-              color="gold"
-            >
-              Economy
-            </Tag>
-            <Tag
-              style={{ padding: "8px 15px", borderRadius: "6px" }}
-              color="lime"
-            >
-              Comfort
-            </Tag>
-            <Tag
-              style={{ padding: "8px 15px", borderRadius: "6px" }}
-              color="green"
-            >
-              Safety
-            </Tag>
-            <Tag
-              style={{ padding: "8px 15px", borderRadius: "6px" }}
-              color="cyan"
-            >
-              Cyan
-            </Tag>
-            <Tag
-              style={{ padding: "8px 15px", borderRadius: "6px" }}
-              color="blue"
-            >
-              Blue
-            </Tag>
-            <Tag
-              style={{ padding: "8px 15px", borderRadius: "6px" }}
-              color="geekblue"
-            >
-              Geekblue
-            </Tag>
-            <Tag
-              style={{ padding: "8px 15px", borderRadius: "6px" }}
-              color="purple"
-            >
-              Purple
-            </Tag>
+            {renderProjectItems(info.inspectItem)}
           </div>
         </div>
 

@@ -10,22 +10,22 @@ interface TaskManagerStore {
         floor: FloorConfigKey,
         area: number;
         spot: number;
-    }
+    }[]
     taskChooseArea: Map<FloorConfigKey, string[]>
     selectCurrentFloorAreaOrSpot: (data: {
         floor: FloorConfigKey,
         area: number;
         spot: number;
-    }) => void;
+    }[]) => void;
 }
 
 export const initTaskStore = {
     mode: Mode.global,
-    currentShowArea: {
+    currentShowArea: [{
         floor: "1F" as FloorConfigKey,
         area: 0,
         spot: 0,
-    },
+    }],
     taskChooseArea: new Map<FloorConfigKey, string[]>()
 }
 
@@ -39,7 +39,7 @@ const useCurrentShowAreaStore = create<TaskManagerStore>()(
             floor: FloorConfigKey,
             area: number;
             spot: number;
-        }) => set({ currentShowAreaStore: data }),
+        }[]) => set({ currentShowAreaStore: data }),
         taskChooseArea: initTaskStore.taskChooseArea
       }),
   );

@@ -56,7 +56,14 @@ export default function BsInfoModule({
           height: 390,
           type: "radialBar",
           events: {
-            dataPointSelection: (event, chartContext, config) => {
+            dataPointSelection: (
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              _event: any,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              _chartContext: any,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              config: any
+            ) => {
               selectCurrentRadialBar(config.dataPointIndex);
             },
           },

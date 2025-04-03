@@ -1,4 +1,70 @@
-export default function PhysicalInfo() {
+import { useEffect, useState } from "react";
+import { CHART_CATEGORY_CONFIG } from "../../constants";
+import {
+  AfterCalculatedData,
+  IAQSingleData,
+  SENSOR_CHART_TYPE,
+  SENSOR_LEVEL,
+} from "../../types";
+import { calculateHeightInChart, cn } from "../../utils";
+
+interface PhysicalInfoProps {
+  data: IAQSingleData;
+}
+
+const levelMap = {
+  [SENSOR_LEVEL.Excellent]: "#7DB1FF",
+  [SENSOR_LEVEL.Good]: "#FFB362",
+  [SENSOR_LEVEL.Exceeding]: "#FC9090",
+};
+
+interface EnhancedAfterCalculatedData extends AfterCalculatedData {
+  // 新增属性
+  unit: string; // 或其他类型
+}
+
+export default function PhysicalInfo({ data }: PhysicalInfoProps) {
+  const [physicalData, setPhysicalData] = useState<
+    EnhancedAfterCalculatedData[]
+  >([]);
+
+  const originData = [
+    ...CHART_CATEGORY_CONFIG[SENSOR_CHART_TYPE["Other Parameters"]],
+    ...CHART_CATEGORY_CONFIG[SENSOR_CHART_TYPE["Physical Parameters"]],
+  ];
+
+  useEffect(() => {
+    const allResult: EnhancedAfterCalculatedData[] = [];
+    originData.forEach((configItem) => {
+      if (
+        configItem.key in data &&
+        data[configItem.key as keyof typeof data] !== undefined &&
+        configItem.standard !== undefined
+      ) {
+        const parameterData = data[configItem.key as keyof typeof data];
+
+        const result = calculateHeightInChart(
+          Number(parameterData),
+          [
+            configItem.standard.Excellent.start,
+            configItem.standard.Excellent.end,
+          ],
+          [configItem.standard.Good.start, configItem.standard.Good.end],
+          configItem.name
+        );
+
+        allResult.push({
+          renderedValue: result.renderedValue,
+          originalValue: result.originalValue,
+          range: result.range,
+          title: configItem.name,
+          unit: configItem.unit,
+        });
+      }
+    });
+    setPhysicalData(allResult);
+  }, [data]);
+
   return (
     <div>
       <div className="container flex flex-row justify-between gap-4 px-8">
@@ -27,70 +93,25 @@ export default function PhysicalInfo() {
           </div>
         </div>
         <div className="grid grid-cols-1 flex-1 sm:group-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-5">
-          <div className="flex flex-col border-1 border-[#000000] rounded-xl p-4 ">
-            <p className="text-md font-blob">Lux</p>
+          {physicalData.map((item) => (
+            <div className="flex flex-col border-1 border-[#000000] rounded-xl p-4 ">
+              <p className="text-md font-blob">{item.title}</p>
 
-            <div className="flex flex-row justify-center my-5 items-center">
-              <span className="text-[#7DB1FF] text-[44px] font-bold">
-                1000
-                <i className="text-sm not-italic text-[#000000] font-normal ml-1">
-                  (Avg)
-                </i>
-              </span>
+              <div className="flex flex-row justify-center my-5 items-center">
+                <span
+                  style={{
+                    color: levelMap[item.range as keyof typeof levelMap],
+                  }}
+                  className={cn(`text-[44px] font-bold`)}
+                >
+                  {item.originalValue}
+                  <i className="text-sm not-italic text-[#000000] font-normal ml-1">
+                    ({item.unit})
+                  </i>
+                </span>
+              </div>
             </div>
-          </div>
-
-          <div className="flex flex-col border-1 border-[#000000] rounded-xl p-4">
-            <p className="text-md font-blob">Lux</p>
-
-            <div className="flex flex-row justify-center my-5 items-center">
-              <span className="text-[#7DB1FF] text-[44px] font-bold">
-                1000
-                <i className="text-sm not-italic text-[#000000] font-normal ml-1">
-                  (Avg)
-                </i>
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-col border-1 border-[#000000] rounded-xl p-4">
-            <p className="text-md font-blob">Lux</p>
-
-            <div className="flex flex-row justify-center my-5 items-center">
-              <span className="text-[#7DB1FF] text-[44px] font-bold">
-                1000
-                <i className="text-sm not-italic text-[#000000] font-normal ml-1">
-                  (Avg)
-                </i>
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-col border-1 border-[#000000] rounded-xl p-4">
-            <p className="text-md font-blob">Lux</p>
-
-            <div className="flex flex-row justify-center my-5 items-center">
-              <span className="text-[#7DB1FF] text-[44px] font-bold">
-                1000
-                <i className="text-sm not-italic text-[#000000] font-normal ml-1">
-                  (Avg)
-                </i>
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-col border-1 border-[#000000] rounded-xl p-4">
-            <p className="text-md font-blob">Lux</p>
-
-            <div className="flex flex-row justify-center my-5 items-center">
-              <span className="text-[#7DB1FF] text-[44px] font-bold">
-                1000
-                <i className="text-sm not-italic text-[#000000] font-normal ml-1">
-                  (Avg)
-                </i>
-              </span>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

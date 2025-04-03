@@ -191,7 +191,7 @@ export const CHART_CATEGORY_CONFIG = {
     [SENSOR_CHART_TYPE["Other Parameters"]]: [
           {
             name: "Lux Level",
-            unit: "Lux",
+            unit: "Avg",
             key: "lux",
             standard: {
                 [SENSOR_LEVEL.Excellent]: {
@@ -284,6 +284,13 @@ export const Floor_Config = {
                 value: "2",
                 imgUrl: point2Png,
             },
+            {
+                id: "1F",
+                key: "spot3",
+                type: Mode.spot,
+                value: "3",
+                imgUrl: point3Png,
+            },
         ]
     },
     '2F': {
@@ -346,6 +353,13 @@ export const Floor_Config = {
                 value: "2",
                 imgUrl: point2Png,
             },
+            {
+                id: "2F",
+                key: "spot3",
+                type: Mode.spot,
+                value: "3",
+                imgUrl: point3Png,
+            },
         ]     
     },
     '3F': {
@@ -400,6 +414,20 @@ export const Floor_Config = {
                 type: Mode.spot,
                 value: "1",
                 imgUrl: point1Png,
+            },
+            {
+                id: "3F",
+                key: "spot2",
+                type: Mode.spot,
+                value: "2",
+                imgUrl: point2Png,
+            },
+            {
+                id: "3F",
+                key: "spot3",
+                type: Mode.spot,
+                value: "3",
+                imgUrl: point3Png,
             },
         ]
     },
@@ -463,6 +491,13 @@ export const Floor_Config = {
                 value: "2",
                 imgUrl: point2Png,  
             },
+            {
+                id: "4F",
+                key: "spot3",
+                type: Mode.spot,
+                value: "3",
+                imgUrl: point3Png,  
+            },
         ]
     },
     '5F': {
@@ -524,6 +559,13 @@ export const Floor_Config = {
                 type: Mode.spot,
                 value: "2",
                 imgUrl: point2Png,
+            },
+            {
+                id: "5F",
+                key: "spot3",
+                type: Mode.spot,
+                value: "3",
+                imgUrl: point3Png,
             },
         ]
     },
@@ -735,3 +777,197 @@ export const Floor_Config = {
         ]
     },
 }
+
+export const COS_URL = "https://inspect-hkcrc-1330283638.cos.ap-hongkong.myqcloud.com"
+
+export enum RADIX_COLOR_MAP {
+    Orange = "orange",
+    Blue = "blue",
+    Pink = "pink",
+    Ruby = "ruby",
+    Jade = "jade",
+    Lime = "lime",
+    Purple = "purple",
+    Brown = "brown",
+    Crimson = "crimson",
+    Cyan = "cyan",
+    Gold = "gold",
+    Gray = "gray",
+    Green = "green",
+    Indigo = "indigo",
+    Plum = "plum",
+    Red = "red",
+    Teal = "teal",
+    Tomato = "tomato",
+    Violet = "violet"
+  }
+
+
+export const Task_Building_Config = [
+    {
+        value: "Building Service",
+        title: "Building Service",
+        key: "0-0",
+        id: "layer_L1", 
+        color: RADIX_COLOR_MAP.Orange,
+        children: [
+            {
+                value: "HVAC-Duct",
+                title: "HVAC-Duct",
+                key: "0-0-1",
+                isShowParent: true,
+                color: RADIX_COLOR_MAP.Cyan,
+                id: "L1_1",
+                mqttKey: "HVAC_Duct",
+            },
+            {
+                value: "EL-Trunking",
+                title: "EL-Trunking",
+                isShowParent: true,
+                key: "0-0-2",
+                color: RADIX_COLOR_MAP.Green,
+                id: "L1_2",
+                mqttKey: "EL_Trunking",
+            },
+            {
+                value: "FS-Pipe",
+                title: "FS-Pipe",
+                isShowParent: true,
+                key: "0-0-3",
+                color: RADIX_COLOR_MAP.Purple,
+                id: "L1_3",
+                mqttKey: "FS_Pipe",
+            },
+            {
+                value: "DR-WP-Pipe",
+                title: "DR-WP-Pipe",
+                isShowParent: true,
+                key: "0-0-4",
+                id: "L1_4",
+                color: RADIX_COLOR_MAP.Red,
+                mqttKey: "DR_WP_Pipe",
+            },
+            {
+                value: "EL-Lighting",
+                title: "EL-Lighting",
+                isShowParent: true,
+                key: "0-0-5",
+                color: RADIX_COLOR_MAP.Red,
+                id: "L1_5",
+                mqttKey: "EL_Lighting",
+            }
+        ],
+    },
+    {
+        value: "Environment",
+        title: "Environment",
+        key: "0-1",
+        id: "layer_L2", 
+        children: [
+            {
+                value: "IAQ Inspection",
+                title: "IAQ Inspection",
+                key: "0-1-1",
+                id: "layer_L2_1",
+                isShowParent: true,
+                color: RADIX_COLOR_MAP.Blue,
+                mqttKey: "IAQ_Inspection",
+                children: [
+                    {
+                        id: "L2_1_1",
+                        key: "0-1-1-1",
+                        value: "CO2",
+                        title: "CO2"
+                    },
+                    {
+                        id: "L2_1_2",
+                        key: "0-1-1-2",
+                        value: "O3",
+                        title: "O3"
+                    },
+                    {
+                        id: "L2_1_3",
+                        key: "0-1-1-3",
+                        value: "PM 2.5",
+                        title: "PM 2.5"
+                    },
+                    {
+                        id: "L2_1_4",
+                        key: "0-1-1-4",
+                        value: "PM 10",
+                        title: "PM 10"
+                    },
+                    {
+                        id: "L2_1_5",
+                        key: "0-1-1-5",
+                        value: "CO",
+                        title: "CO"
+                    },
+                    {
+                        id: "L2_1_6",
+                        key: "0-1-1-6",
+                        value: "NO2",
+                        title: "NO2"
+                    },
+                    {
+                        id: "L2_1_7",
+                        key: "0-1-1-7",
+                        value: "HCHO",
+                        title: "HCHO"
+                    },
+                    {
+                        id: "L2_1_8",
+                        key: "0-1-1-8",
+                        value: "Rn",
+                        title: "Rn"
+                    }
+                ]
+            },
+            {
+                value: "Lux Level",
+                title: "Lux Level",
+                key: "0-1-2",
+                id: "L2_2",
+                isShowParent: true,
+                color: RADIX_COLOR_MAP.Pink,
+                mqttKey: "Lux_Level",
+            },
+            {
+                value: "Noise Level",
+                title: "Noise Level",
+                key: "0-1-3",
+                id: "L2_3",
+                isShowParent: true,
+                color: RADIX_COLOR_MAP.Ruby,
+                mqttKey: "Noise_Level",
+            },
+            {
+                value: "Temperature",
+                title: "Temperature",
+                key: "0-1-4",
+                id: "L2_4",
+                isShowParent: true,
+                color: RADIX_COLOR_MAP.Jade,
+                mqttKey: "Temperature",
+            },
+            {
+                value: "R. Humidity",
+                title: "R. Humidity",
+                key: "0-1-5",
+                id: "L2_5",
+                isShowParent: true,
+                color: RADIX_COLOR_MAP.Lime,
+                mqttKey: "R_Humidity",
+            },
+            {
+                value: "Air Flow",
+                title: "Air Flow",
+                key: "0-1-6",
+                id: "L2_6",
+                isShowParent: true,
+                color: RADIX_COLOR_MAP.Purple,
+                mqttKey: "Air_Flow",
+            }
+        ]
+    },
+]

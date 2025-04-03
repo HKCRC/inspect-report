@@ -6,9 +6,7 @@ import useCurrentShowAreaStore from "../../store";
 import { useEffect, useState } from "react";
 
 export const InspectAreaView = () => {
-  const { currentShowAreaStore, taskChooseArea } = useCurrentShowAreaStore();
-
-  const { floor, area, spot } = currentShowAreaStore;
+  const { currentShowAreaStore } = useCurrentShowAreaStore();
 
   const [currentShowArea, setCurrentShowArea] = useState<
     {
@@ -17,54 +15,52 @@ export const InspectAreaView = () => {
   >([]);
 
   useEffect(() => {
-    const multiManualSelectIndex = floor;
-    if (multiManualSelectIndex) {
-      setCurrentShowAreAction(multiManualSelectIndex);
-    }
-  }, [area, spot, floor]);
+    if (currentShowAreaStore.length) {
+      let mode: Mode = Mode.global;
+      let currentFloorUrl: string = "";
+      const currentShowArea = currentShowAreaStore.map((item) => {
+        const { floor, area, spot } = item;
+        const currentFloor = Floor_Config[floor];
+        currentFloorUrl = floor;
+        if (area !== 0 || spot !== 0) {
+          mode = Mode.spot;
+        }
 
-  const setCurrentShowAreAction = (index: FloorConfigKey) => {
-    let type = Mode.global;
-    if (area !== 0) {
-      type = Mode.area;
-    }
-    if (spot !== 0) {
-      type = Mode.spot;
-    }
-    const currentChooseAreaMap = taskChooseArea?.get(index as FloorConfigKey);
-
-    if (type && [Mode.area, Mode.spot].includes(type)) {
-      const getCurrentModeShowConfig =
-        Floor_Config[index as FloorConfigKey][type as Mode.area | Mode.spot];
-
-      const currentShowAreaResult = getCurrentModeShowConfig
-        .filter((item) => {
-          return currentChooseAreaMap?.includes(item.value);
-        })
-        .map((item) => {
+        if (area !== 0) {
+          const currentArea = currentFloor.area.filter(
+            (item) => parseInt(item.value) === area
+          );
           return {
-            url: item.imgUrl,
+            url: currentArea[0].imgUrl,
           };
-        });
+        } else if (spot !== 0) {
+          const currentSpot = currentFloor.spot.filter(
+            (item) => parseInt(item.value) === spot
+          );
+          return {
+            url: currentSpot[0].imgUrl,
+          };
+        } else {
+          return {
+            url: currentFloor.imgUrl,
+          };
+        }
+      });
 
-      if (
-        !currentShowAreaResult.length ||
-        currentShowAreaResult.find((item) => item.url.indexOf("floor") < 0)
-      ) {
-        currentShowAreaResult.unshift({
-          url: Floor_Config[index as FloorConfigKey].imgUrl,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      if (mode === Mode.spot) {
+        currentShowArea.unshift({
+          url: Floor_Config[currentFloorUrl as FloorConfigKey].imgUrl,
+        });
+      } else {
+        currentShowArea.push({
+          url: Floor_Config[currentFloorUrl as FloorConfigKey].mask,
         });
       }
-      setCurrentShowArea(currentShowAreaResult);
-    } else {
-      const getCurrentModeShowConfig = Floor_Config[index as FloorConfigKey];
-      const tmp: { url: string }[] = [
-        { url: getCurrentModeShowConfig.imgUrl },
-        { url: currentChooseAreaMap ? getCurrentModeShowConfig.mask : "" },
-      ];
-      setCurrentShowArea(tmp);
+      setCurrentShowArea(currentShowArea);
     }
-  };
+  }, [currentShowAreaStore]);
 
   return (
     <Flex className="relative mt-5 min-h-54 rounded-3xl bg-[#f9f9f9] h-full">

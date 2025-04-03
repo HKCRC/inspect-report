@@ -3,7 +3,12 @@ import ApexCharts from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { CHART_CATEGORY_CONFIG } from "../../constants";
 import { calculateHeightInChart } from "../../utils";
-import { IAQSingleData, SENSOR_CHART_TYPE, SENSOR_LEVEL } from "../../types";
+import {
+  AfterCalculatedData,
+  IAQSingleData,
+  SENSOR_CHART_TYPE,
+  SENSOR_LEVEL,
+} from "../../types";
 
 interface ChartProps {
   title: string;
@@ -30,12 +35,7 @@ export const Chart = ({
 
   const calculateHeight = (dataArray: IAQSingleData[]) => {
     const allResult: {
-      [key: string]: {
-        renderedValue: number;
-        originalValue: number;
-        range: SENSOR_LEVEL | undefined;
-        title: string;
-      }[];
+      [key: string]: AfterCalculatedData[];
     } = {};
     // 对每个数据项执行计算
     dataArray.forEach((dataItem) => {
@@ -156,9 +156,13 @@ export const Chart = ({
     const anyKey = Object.keys(allResult)[0];
 
     const titleArr = allResult?.[anyKey]?.map((item) => item.title);
-    const originalValueArr = allResult?.[anyKey]?.map(
-      (item) => item.originalValue
-    );
+    const originalValueArr: {
+      [key: string]: number[];
+    } = {};
+    Object.keys(allResult).forEach((key) => {
+      const resultArr = allResult[key];
+      originalValueArr[key] = resultArr.map((item) => item.originalValue);
+    });
 
     const seriesData: ApexAxisChartSeries = [];
 
@@ -202,6 +206,8 @@ export const Chart = ({
     if (!chartData) return;
 
     setState({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       series: chartData.series,
       options: {
         chart: {
@@ -300,13 +306,13 @@ export const Chart = ({
           formatter: (val: number, opts: any) => {
             // 获取当前数据点的索引和系列索引
             const dataPointIndex = opts.dataPointIndex;
-
+            const currentKey = opts.config.series?.[opts?.seriesIndex]?.name;
             // 检查当前值是否为null
             if (val === null) return "";
 
             // 只在有值的柱子顶部显示原始值
             // 只在第一个系列上显示原始值，避免重复
-            return chartData.originalValueArr[dataPointIndex];
+            return chartData.originalValueArr[currentKey][dataPointIndex];
           },
           style: {
             fontSize: "12px",
@@ -386,53 +392,7 @@ export const Chart = ({
         },
         tooltip: {
           enabled: true,
-          //   shared: true, // 确保设置为 true
-          //   intersect: false, // 确保设置为 false
-          //   // 使用自定义tooltip格式
-          //   custom: function ({
-          //     series,
-          //     dataPointIndex,
-          //     w,
-          //   }: {
-          //     series: number[][];
-          //     dataPointIndex: number;
-          //     w: {
-          //       globals: {
-          //         labels: string[];
-          //         seriesNames: string[];
-          //         colors: string[];
-          //       };
-          //     };
-          //   }) {
-          //     // 获取原始值
-          //     const originalValue = chartData.originalValueArr[dataPointIndex];
-          //     // 获取X轴类别（项目名称）
-          //     const xAxisLabel = w.globals.labels[dataPointIndex];
-
-          //     // 创建所有系列的信息
-          //     let seriesContent = "";
-
-          //     // 遍历所有系列，检查在当前dataPointIndex位置是否有值
-          //     for (let i = 0; i < series.length; i++) {
-          //       const value = series[i][dataPointIndex];
-          //       if (value !== null && value !== undefined) {
-          //         const seriesName = w.globals.seriesNames[i];
-          //         seriesContent += `<div><span style="color: ${
-          //           w.globals.colors[i]
-          //         };">●</span> ${seriesName}: ${value.toFixed(2)}</div>`;
-          //       }
-          //     }
-
-          //     // 如果没有任何系列有值，返回空字符串
-          //     if (seriesContent === "") return "";
-
-          //     return `<div class="apexcharts-tooltip-box" style="padding: 8px; background: #fff; border: 1px solid #ccc; border-radius: 4px;">
-          //                 <div style="font-weight: bold; margin-bottom: 5px;">${xAxisLabel}</div>
-          //                 ${seriesContent}
-          //                 <div style="font-weight: bold; margin-top: 5px;">Original Value: ${originalValue}</div>
-          //               </div>`;
-          //   },
-        } as ApexOptions,
+        },
       },
     });
   }, [data]);

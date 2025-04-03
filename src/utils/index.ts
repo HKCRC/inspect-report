@@ -1,5 +1,10 @@
-import { SENSOR_LEVEL } from "../types";
+import { inspectItemOriginNode, SENSOR_LEVEL } from "../types";
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
 
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs))
+  }
 
 export function calculateHeightInChart(y: number, excellentRange: number[], goodRange: number[], title: string, isShowUnStandard = false) {
     // 解析区间阈值
@@ -45,3 +50,33 @@ export function calculateHeightInChart(y: number, excellentRange: number[], good
         title
     };
 }
+
+
+/**
+ * 过滤出包含 isShowParent 标记的完整配置对象
+ * @param {string[]} backendIds 后台返回的ID数组
+ * @param {Array} config 系统配置数据
+ * @returns {Object[]} 符合条件的完整配置对象数组
+ */
+export function getFilteredParentObjects(backendIds: string[], config: inspectItemOriginNode[]) {
+    // 创建快速查找的ID映射
+    const idNodeMap = new Map();
+    
+    // 递归构建映射（遇到 isShowParent 停止深入）
+    const buildMap = (nodes: inspectItemOriginNode[]) => {
+        nodes.forEach(node => {
+            idNodeMap.set(node.id, node);
+            if (node.children && !node.isShowParent) {
+                buildMap(node.children);
+            }
+        });
+    };
+  
+    buildMap(config); // 初始化映射
+  
+    // 过滤并返回完整对象
+    return backendIds
+        .map(id => idNodeMap.get(id))                // 获取完整对象
+        .filter(node => node?.isShowParent);         // 验证标记存在
+  }
+  
