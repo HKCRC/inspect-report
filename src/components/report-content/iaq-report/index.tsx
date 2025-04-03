@@ -20,7 +20,7 @@ import {
 } from "../../../types";
 import { API_URL, CHART_CATEGORY_CONFIG } from "../../../constants";
 import { ScrollableTabs } from "../../scroll-tab";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type IAQReportProps = {
   taskId: string;
@@ -37,6 +37,10 @@ export default function IAQReport({ taskId }: IAQReportProps) {
     Record<number, IAQSingleData[]>
   >({});
   const [iaqData, setIaqData] = useState<IAQSingleData[]>([]);
+  const [floorBsDataCollectionCopy, setFloorBsDataCollectionCopy] = useState<
+    Record<number, IAQSingleData[]>
+  >({});
+  const [selectPick, setSelectPick] = useState<string[]>([]);
 
   useEffect(() => {
     fetchData();
@@ -67,17 +71,74 @@ export default function IAQReport({ taskId }: IAQReportProps) {
       setFloorBsDataCollection(floorBsDataCollection);
       setCurrentFloor(`tab${originData[0].floor}`);
       setIaqData(originData);
+      initFirstIAQData(originData[0]);
     } catch (e) {
       messageApi.error("Failed to fetch bs data");
     }
+  };
+
+  useEffect(() => {
+    if (currentFloor) {
+      const initData =
+        floorBsDataCollection[parseInt(currentFloor.replace("tab", ""))][0];
+      initFirstIAQData(initData);
+    }
+  }, [currentFloor, iaqData]);
+
+  const initFirstIAQData = (originData: IAQSingleData) => {
+    let key = `Floor${originData.floor}`;
+    if (originData.spot !== 0) {
+      key = `Spot${originData.spot}`;
+    } else if (originData.area !== 0) {
+      key = `Area${originData.area}`;
+    } else {
+      key = `Floor${originData.floor}`;
+    }
+    onFloorChange([key]);
   };
 
   const handleTabChange = (tabId: string | number) => {
     setCurrentFloor(tabId.toString());
   };
 
+  const getKeyWord = (item: string) => {
+    return item.indexOf("Spot") > -1
+      ? "Spot"
+      : item.indexOf("Area") > -1
+      ? "Area"
+      : "Floor";
+  };
+
   const onFloorChange = (checkedValues: string[]) => {
-    console.log("onChange:", checkedValues);
+    if (currentFloor) {
+      const currentFloorInt = parseInt(currentFloor.replace("tab", ""));
+      if (checkedValues.length === 0) {
+        // 兜底逻辑
+      } else {
+        const currentShowData: IAQSingleData[] = [];
+        const currentFloorData = floorBsDataCollection[currentFloorInt];
+
+        checkedValues.forEach((choonseItem) => {
+          if (choonseItem.indexOf(getKeyWord(choonseItem)) > -1) {
+            const currenTargetData = currentFloorData.find(
+              (item) =>
+                item[
+                  getKeyWord(choonseItem).toLowerCase() as keyof IAQSingleData
+                ] === parseInt(choonseItem.replace(getKeyWord(choonseItem), ""))
+            );
+            if (currenTargetData) {
+              currentShowData.push(currenTargetData);
+            }
+
+            setSelectPick(checkedValues);
+            setFloorBsDataCollectionCopy({
+              ...floorBsDataCollectionCopy,
+              [currentFloorInt]: currentShowData,
+            });
+          }
+        });
+      }
+    }
   };
 
   const showSpotOrArea = (floor: number, spot: number, area: number) => {
@@ -89,7 +150,31 @@ export default function IAQReport({ taskId }: IAQReportProps) {
       return `Area${area}`;
     }
 
-    return `${floor}F`;
+    return `Floor${floor}`;
+  };
+
+  const sliceKeyToNewArr = (
+    key: keyof IAQSingleData,
+    originArr: IAQSingleData[]
+  ) => {
+    const newArr: Partial<IAQSingleData>[] = [];
+    if (originArr?.length) {
+      originArr.forEach((item) => {
+        if (item[key]) {
+          newArr.push({
+            [key]: item[key],
+          });
+        }
+        newArr.push({
+          floor: item.floor,
+          spot: item.spot,
+          area: item.area,
+          taskId: item.taskId,
+        });
+      });
+    }
+
+    return newArr;
   };
 
   return (
@@ -211,13 +296,22 @@ export default function IAQReport({ taskId }: IAQReportProps) {
                     <Checkbox.Group
                       style={{ width: "100%" }}
                       onChange={onFloorChange}
+                      value={selectPick}
                     >
                       <Row className="mx-2">
                         {currentFloor &&
                           floorBsDataCollection[
                             parseInt(currentFloor.replace("tab", ""))
-                          ].map((item) => (
-                            <Col className="py-1" span={12}>
+                          ].map((item, index) => (
+                            <Col
+                              className="py-1"
+                              span={12}
+                              key={showSpotOrArea(
+                                item.floor,
+                                item.spot,
+                                item.area
+                              )}
+                            >
                               <Checkbox
                                 value={showSpotOrArea(
                                   item.floor,
@@ -262,22 +356,11 @@ export default function IAQReport({ taskId }: IAQReportProps) {
           <div className="px-8">
             <Chart
               title="IAQ Parameters"
-              data={{
-                temperature: 20,
-                humidity: 65,
-                airflow: 20,
-                co2: 1500,
-                co: 9000,
-                o3: 5,
-                tvoc: 180,
-                pm2_5: 4,
-                pm10: 35,
-                no2: 80,
-                hcho: 85,
-                rn: 8,
-                lux: 30,
-                noise: 5600,
-              }}
+              data={
+                floorBsDataCollectionCopy[
+                  parseInt(currentFloor?.replace("tab", "") || "0")
+                ]
+              }
               type={SENSOR_CHART_TYPE["IAQ Parameters"]}
             />
           </div>
@@ -294,7 +377,7 @@ export default function IAQReport({ taskId }: IAQReportProps) {
           <PhysicalInfo />
 
           {CHART_CATEGORY_CONFIG[SENSOR_CHART_TYPE["Physical Parameters"]].map(
-            (item) => (
+            (itemType) => (
               <>
                 <Divider
                   style={{
@@ -306,10 +389,13 @@ export default function IAQReport({ taskId }: IAQReportProps) {
                 />
                 <div className="mt-8 px-8">
                   <Chart
-                    title={item.name}
-                    data={{
-                      [item.key]: 23,
-                    }}
+                    title={itemType.name}
+                    data={sliceKeyToNewArr(
+                      itemType.key as keyof IAQSingleData,
+                      floorBsDataCollectionCopy[
+                        parseInt(currentFloor?.replace("tab", "") || "0")
+                      ]
+                    )}
                     type={SENSOR_CHART_TYPE["Physical Parameters"]}
                     isShowUnStandard={true}
                   />
@@ -319,7 +405,7 @@ export default function IAQReport({ taskId }: IAQReportProps) {
           )}
 
           {CHART_CATEGORY_CONFIG[SENSOR_CHART_TYPE["Other Parameters"]].map(
-            (item) => (
+            (itemType) => (
               <>
                 <Divider
                   style={{
@@ -331,10 +417,13 @@ export default function IAQReport({ taskId }: IAQReportProps) {
                 />
                 <div className="mt-8 px-8">
                   <Chart
-                    title={item.name}
-                    data={{
-                      [item.key]: 250,
-                    }}
+                    title={itemType.name}
+                    data={sliceKeyToNewArr(
+                      itemType.key as keyof IAQSingleData,
+                      floorBsDataCollectionCopy[
+                        parseInt(currentFloor?.replace("tab", "") || "0")
+                      ]
+                    )}
                     type={SENSOR_CHART_TYPE["Other Parameters"]}
                     isShowUnStandard={true}
                   />

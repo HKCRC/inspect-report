@@ -3,11 +3,11 @@ import ApexCharts from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { CHART_CATEGORY_CONFIG } from "../../constants";
 import { calculateHeightInChart } from "../../utils";
-import { SENSOR_CHART_TYPE, SENSOR_LEVEL } from "../../types";
+import { IAQSingleData, SENSOR_CHART_TYPE, SENSOR_LEVEL } from "../../types";
 
 interface ChartProps {
   title: string;
-  data: { [key: string]: number | string };
+  data: IAQSingleData[];
   type: SENSOR_CHART_TYPE;
   isShowUnStandard?: boolean;
 }
@@ -25,34 +25,61 @@ export const Chart = ({
         data: [] as number[],
       },
     ],
-    options: {},
+    options: {} as ApexOptions,
   });
 
-  const calculateHeight = (data: { [key: string]: number | string }) => {
-    let parameterData = null;
+  const calculateHeight = (dataArray: IAQSingleData[]) => {
     const allResult: {
-      renderedValue: number;
-      originalValue: number;
-      range: SENSOR_LEVEL | undefined;
-      title: string;
-    }[] = [];
-    CHART_CATEGORY_CONFIG[type].forEach((item) => {
-      if (
-        item.key in data &&
-        data[item.key as keyof typeof data] !== undefined &&
-        item.standard !== undefined
-      ) {
-        parameterData = data[item.key as keyof typeof data];
-        const result = calculateHeightInChart(
-          Number(parameterData),
-          [item.standard.Excellent.start, item.standard.Excellent.end],
-          [item.standard.Good.start, item.standard.Good.end],
-          item.name,
-          isShowUnStandard
-        );
-        allResult.push(result);
+      [key: string]: {
+        renderedValue: number;
+        originalValue: number;
+        range: SENSOR_LEVEL | undefined;
+        title: string;
+      }[];
+    } = {};
+    // 对每个数据项执行计算
+    dataArray.forEach((dataItem) => {
+      const currentFloor = dataItem.floor;
+      let key = `Floor ${currentFloor}`;
+      if (dataItem.area !== 0) {
+        key = `Area ${dataItem.area}`;
+      } else if (dataItem.spot !== 0) {
+        key = `Spot ${dataItem.spot}`;
+      } else {
+        key = `Floor ${currentFloor}`;
       }
+
+      CHART_CATEGORY_CONFIG[type].forEach((configItem) => {
+        if (
+          configItem.key in dataItem &&
+          dataItem[configItem.key as keyof typeof dataItem] !== undefined &&
+          configItem.standard !== undefined
+        ) {
+          const parameterData =
+            dataItem[configItem.key as keyof typeof dataItem];
+          const result = calculateHeightInChart(
+            Number(parameterData),
+            [
+              configItem.standard.Excellent.start,
+              configItem.standard.Excellent.end,
+            ],
+            [configItem.standard.Good.start, configItem.standard.Good.end],
+            configItem.name
+          );
+
+          if (!allResult[key]) {
+            allResult[key] = [];
+          }
+          allResult[key].push({
+            renderedValue: result.renderedValue,
+            originalValue: result.originalValue,
+            range: result.range,
+            title: configItem.name,
+          });
+        }
+      });
     });
+
     return allResult;
   };
 
@@ -122,33 +149,46 @@ export const Chart = ({
   };
 
   const getSeriesData = () => {
+    if (!data) return;
+
     const allResult = calculateHeight(data);
 
-    const titleArr = allResult.map((item) => item.title);
-    const originalValueArr = allResult.map((item) => item.originalValue);
+    const anyKey = Object.keys(allResult)[0];
 
-    // 按照SENSOR_LEVEL创建不同的系列
-    const levels = Array.from(
-      new Set(allResult.filter((item) => item.range).map((item) => item.range))
-    ) as SENSOR_LEVEL[];
+    const titleArr = allResult?.[anyKey]?.map((item) => item.title);
+    const originalValueArr = allResult?.[anyKey]?.map(
+      (item) => item.originalValue
+    );
 
-    // 为每个SENSOR_LEVEL创建一个系列数据
-    const seriesData = levels.map((level) => {
-      // 创建与titleArr长度相同的数组，默认值为null
-      const data = new Array(titleArr.length).fill(null);
+    const seriesData: ApexAxisChartSeries = [];
 
-      // 填充对应level的数据
-      allResult.forEach((item, index) => {
-        if (item.range === level) {
-          data[index] = item.renderedValue;
-        }
+    Object.keys(allResult).forEach((key) => {
+      const currentItem = allResult[key];
+      const allGoals: ApexAxisChartSeries[0]["data"][] = [];
+      currentItem.map((item) => {
+        const newObj = {
+          x: item.title,
+          y: item.renderedValue,
+          goals: [
+            {
+              name: item.range as SENSOR_LEVEL,
+              value: item.renderedValue,
+              strokeHeight: 0,
+              strokeColor: "transparent",
+            },
+          ],
+          columnWidthOffset: 1,
+        };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        allGoals.push(newObj as any);
       });
-
-      return {
-        name: level,
-        data: data,
-      };
+      seriesData.push({
+        name: key,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data: allGoals as any,
+      });
     });
+
     return {
       series: seriesData,
       xaxis: titleArr,
@@ -159,27 +199,53 @@ export const Chart = ({
   useEffect(() => {
     const chartData = getSeriesData();
 
+    if (!chartData) return;
+
     setState({
       series: chartData.series,
       options: {
         chart: {
           type: "bar",
-          stacked: true,
           toolbar: {
             show: false, // 关闭右上角的工具栏
           },
         },
-        colors: chartData.series.map((series) => {
-          switch (series.name) {
-            case "Excellent":
-              return "#7DB1FF";
-            case "Good":
-              return "#FFB362";
-            case "Exceeding":
-              return "#FC9090";
-            default:
-              return "#999999"; // 默认颜色
-          }
+        colors: chartData.series.map(() => {
+          // 返回一个函数，该函数将根据数据点的goals.name属性返回相应的颜色
+          return function ({
+            dataPointIndex,
+            seriesIndex,
+            w,
+          }: {
+            dataPointIndex: number;
+            seriesIndex: number;
+            w: unknown;
+          }) {
+            // 获取当前数据点
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const dataPoint = (w as any).config.series[seriesIndex].data[
+              dataPointIndex
+            ];
+
+            // 检查是否有goals属性及name
+            if (dataPoint && dataPoint.goals && dataPoint.goals.length > 0) {
+              const level = dataPoint.goals[0].name;
+
+              // 根据等级返回对应的颜色
+              switch (level) {
+                case SENSOR_LEVEL.Excellent:
+                  return "#7DB1FF"; // 蓝色
+                case SENSOR_LEVEL.Good:
+                  return "#FFB362"; // 黄色
+                case SENSOR_LEVEL.Exceeding:
+                  return "#FC9090"; // 红色
+                default:
+                  return "#999999"; // 默认灰色
+              }
+            }
+
+            return "#999999"; // 默认灰色
+          };
         }),
         annotations: {
           yaxis: renderStandardYaxis(),
@@ -187,18 +253,14 @@ export const Chart = ({
         plotOptions: {
           bar: {
             horizontal: false,
-            columnWidth: "40%", // 调整柱子宽度
-            endingShape: "rounded",
+            columnWidth: "55%", // 调整单个柱子宽度
             borderRadius: 0,
             borderRadiusApplication: "end",
-            distributed: false, // 设置为true会将每个柱子视为单独的类别
+            distributed: false, // 改为false，让我们可以自定义每个柱子的颜色
             dataLabels: {
               position: "top", // 将标签放在顶部
-
               hideOverflowingLabels: false, // 防止隐藏溢出标签
-              minHeight: 0, // 允许最小高度值
             },
-            minHeight: 0,
           },
         },
         grid: {
@@ -237,7 +299,6 @@ export const Chart = ({
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           formatter: (val: number, opts: any) => {
             // 获取当前数据点的索引和系列索引
-            const seriesIndex = opts.seriesIndex;
             const dataPointIndex = opts.dataPointIndex;
 
             // 检查当前值是否为null
@@ -245,14 +306,7 @@ export const Chart = ({
 
             // 只在有值的柱子顶部显示原始值
             // 只在第一个系列上显示原始值，避免重复
-            if (
-              seriesIndex === 0 ||
-              (seriesIndex > 0 &&
-                chartData.series[seriesIndex - 1].data[dataPointIndex] === null)
-            ) {
-              return chartData.originalValueArr[dataPointIndex];
-            }
-            return "";
+            return chartData.originalValueArr[dataPointIndex];
           },
           style: {
             fontSize: "12px",
@@ -281,10 +335,6 @@ export const Chart = ({
             ],
           },
           offsetY: -20,
-          hideOverflowingLabels: false, // 确保不会隐藏溢出的标签
-          minHeight: 0, // 允许最小高度为0
-          allowOverlap: true, // 允许标签重叠
-          orientation: "vertical",
         },
         stroke: {
           show: true,
@@ -314,19 +364,28 @@ export const Chart = ({
           },
         },
         legend: {
+          show: true,
           position: "left",
           offsetY: 65,
           offsetX: -80,
-          showForSingleSeries: true, // 添加此行，确保单系列时也显示图例
-          onItemClick: {
-            toggleDataSeries: false, // 可选：防止点击图例时切换系列的显示/隐藏
+          horizontalAlign: "left",
+          customLegendItems: [
+            `${SENSOR_LEVEL.Exceeding} Class`,
+            `${SENSOR_LEVEL.Good} Class`,
+            `${SENSOR_LEVEL.Excellent} Class`,
+          ],
+          showForSingleSeries: true,
+          showForNullSeries: true,
+          showForZeroSeries: true,
+          markers: {
+            fillColors: ["#FC9090", "#FFB362", "#7DB1FF"],
           },
         },
         fill: {
           opacity: 1,
         },
         tooltip: {
-          enabled: false,
+          enabled: true,
           //   shared: true, // 确保设置为 true
           //   intersect: false, // 确保设置为 false
           //   // 使用自定义tooltip格式
@@ -376,7 +435,7 @@ export const Chart = ({
         } as ApexOptions,
       },
     });
-  }, []);
+  }, [data]);
 
   return (
     <div className="relative">
