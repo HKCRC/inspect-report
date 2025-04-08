@@ -1,4 +1,4 @@
-import { inspectItemOriginNode, SENSOR_LEVEL } from "../types";
+import { IAQSingleData, inspectItemOriginNode, Mode, SENSOR_LEVEL } from "../types";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -80,3 +80,34 @@ export function getFilteredParentObjects(backendIds: string[], config: inspectIt
         .filter(node => node?.isShowParent);         // 验证标记存在
   }
   
+
+  export const getYearMonthDay = (date: string) => {
+    const dateObj = new Date(date);
+    return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate();
+  }
+
+  export const isAreaOrSpot = (module: IAQSingleData) => {
+    const info = {
+        mode: Mode.global,
+        floor: module.floor,
+        area: module.area,
+        spot: module.spot,
+        str: "",
+    }
+    if (module.area !== 0) {
+        info.str = `Area ${module.area}`
+        info.mode = Mode.area
+    } else if (module.spot !== 0) {
+        info.str = `Point ${module.spot}`;
+        info.mode = Mode.spot
+    } else {
+        info.str = `Floor ${module.floor}`;
+        info.mode = Mode.global
+    }
+
+    return {
+        mode: info.mode,
+        floor: info.floor,
+        str: info.str,
+    };
+  }

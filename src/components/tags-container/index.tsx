@@ -6,7 +6,6 @@ export const TagsContainer = ({
 }: {
   inspectItems: inspectItemOriginNode[];
 }) => {
-  console.log(inspectItems);
   return (
     <div
       className="flex flex-1 flex-nowrap items-center overflow-hidden"

@@ -5,7 +5,19 @@ import { FloorConfigKey, Mode } from "../../types";
 import useCurrentShowAreaStore from "../../store";
 import { useEffect, useState } from "react";
 
-export const InspectAreaView = () => {
+interface InspectAreaViewProps {
+  bgColor?: string;
+  currentShowAreaStoreForProps?: {
+    floor: FloorConfigKey;
+    area: number;
+    spot: number;
+  }[];
+}
+
+export const InspectAreaView = ({
+  bgColor,
+  currentShowAreaStoreForProps,
+}: InspectAreaViewProps) => {
   const { currentShowAreaStore } = useCurrentShowAreaStore();
 
   const [currentShowArea, setCurrentShowArea] = useState<
@@ -15,18 +27,23 @@ export const InspectAreaView = () => {
   >([]);
 
   useEffect(() => {
-    if (currentShowAreaStore.length) {
+    const exectData = currentShowAreaStoreForProps
+      ? currentShowAreaStoreForProps
+      : currentShowAreaStore;
+    if (exectData.length) {
       let mode: Mode = Mode.global;
       let currentFloorUrl: string = "";
-      const currentShowArea = currentShowAreaStore.map((item) => {
+      const currentShowArea = exectData.map((item) => {
         const { floor, area, spot } = item;
+
         const currentFloor = Floor_Config[floor];
         currentFloorUrl = floor;
-        if (area !== 0 || spot !== 0) {
+        if (spot !== 0) {
           mode = Mode.spot;
         }
 
         if (area !== 0) {
+          mode = Mode.area;
           const currentArea = currentFloor.area.filter(
             (item) => parseInt(item.value) === area
           );
@@ -37,6 +54,7 @@ export const InspectAreaView = () => {
           const currentSpot = currentFloor.spot.filter(
             (item) => parseInt(item.value) === spot
           );
+          console.error("currentSpot", currentSpot);
           return {
             url: currentSpot[0].imgUrl,
           };
@@ -60,10 +78,10 @@ export const InspectAreaView = () => {
       }
       setCurrentShowArea(currentShowArea);
     }
-  }, [currentShowAreaStore]);
+  }, [currentShowAreaStore, currentShowAreaStoreForProps]);
 
   return (
-    <Flex className="relative mt-5 min-h-54 rounded-3xl bg-[#f9f9f9] h-full">
+    <Flex className={`relative mt-5 min-h-54 rounded-3xl ${bgColor} h-full`}>
       {currentShowArea.length ? (
         currentShowArea.map((item) => (
           <motion.img

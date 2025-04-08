@@ -781,25 +781,25 @@ export const Floor_Config = {
 export const COS_URL = "https://inspect-hkcrc-1330283638.cos.ap-hongkong.myqcloud.com"
 
 export enum RADIX_COLOR_MAP {
-    Orange = "orange",
-    Blue = "blue",
-    Pink = "pink",
-    Ruby = "ruby",
-    Jade = "jade",
-    Lime = "lime",
-    Purple = "purple",
-    Brown = "brown",
-    Crimson = "crimson",
-    Cyan = "cyan",
-    Gold = "gold",
-    Gray = "gray",
-    Green = "green",
-    Indigo = "indigo",
-    Plum = "plum",
-    Red = "red",
-    Teal = "teal",
-    Tomato = "tomato",
-    Violet = "violet"
+    Orange = "#FF7F50",
+    Blue = "#1E90FF",
+    Pink = "#FF69B4",
+    Ruby = "#E0115F",
+    Jade = "#00A86B",
+    Lime = "#32CD32",
+    Purple = "#9370DB",
+    Brown = "#A0522D",
+    Crimson = "#DC143C",
+    Cyan = "#00FFFF",
+    Gold = "#FFD700",
+    Gray = "#808080",
+    Green = "#2E8B57",
+    Indigo = "#4B0082",
+    Plum = "#DDA0DD",
+    Red = "#FF0000",
+    Teal = "#008080",
+    Tomato = "#FF6347",
+    Violet = "#8A2BE2"
   }
 
 
@@ -815,7 +815,6 @@ export const Task_Building_Config = [
                 value: "HVAC-Duct",
                 title: "HVAC-Duct",
                 key: "0-0-1",
-                isShowParent: true,
                 color: RADIX_COLOR_MAP.Cyan,
                 id: "L1_1",
                 mqttKey: "HVAC_Duct",
@@ -823,7 +822,7 @@ export const Task_Building_Config = [
             {
                 value: "EL-Trunking",
                 title: "EL-Trunking",
-                isShowParent: true,
+
                 key: "0-0-2",
                 color: RADIX_COLOR_MAP.Green,
                 id: "L1_2",
@@ -832,7 +831,6 @@ export const Task_Building_Config = [
             {
                 value: "FS-Pipe",
                 title: "FS-Pipe",
-                isShowParent: true,
                 key: "0-0-3",
                 color: RADIX_COLOR_MAP.Purple,
                 id: "L1_3",
@@ -841,7 +839,6 @@ export const Task_Building_Config = [
             {
                 value: "DR-WP-Pipe",
                 title: "DR-WP-Pipe",
-                isShowParent: true,
                 key: "0-0-4",
                 id: "L1_4",
                 color: RADIX_COLOR_MAP.Red,
@@ -850,7 +847,6 @@ export const Task_Building_Config = [
             {
                 value: "EL-Lighting",
                 title: "EL-Lighting",
-                isShowParent: true,
                 key: "0-0-5",
                 color: RADIX_COLOR_MAP.Red,
                 id: "L1_5",
@@ -926,45 +922,46 @@ export const Task_Building_Config = [
             {
                 value: "Lux Level",
                 title: "Lux Level",
+                isShowParent: true,
                 key: "0-1-2",
                 id: "L2_2",
-                isShowParent: true,
                 color: RADIX_COLOR_MAP.Pink,
                 mqttKey: "Lux_Level",
             },
             {
                 value: "Noise Level",
                 title: "Noise Level",
+                isShowParent: true,
                 key: "0-1-3",
                 id: "L2_3",
-                isShowParent: true,
                 color: RADIX_COLOR_MAP.Ruby,
                 mqttKey: "Noise_Level",
             },
             {
                 value: "Temperature",
                 title: "Temperature",
+                isShowParent: true,
                 key: "0-1-4",
                 id: "L2_4",
-                isShowParent: true,
                 color: RADIX_COLOR_MAP.Jade,
                 mqttKey: "Temperature",
             },
             {
                 value: "R. Humidity",
                 title: "R. Humidity",
+                isShowParent: true,
                 key: "0-1-5",
                 id: "L2_5",
-                isShowParent: true,
+
                 color: RADIX_COLOR_MAP.Lime,
                 mqttKey: "R_Humidity",
             },
             {
                 value: "Air Flow",
                 title: "Air Flow",
+                isShowParent: true,
                 key: "0-1-6",
                 id: "L2_6",
-                isShowParent: true,
                 color: RADIX_COLOR_MAP.Purple,
                 mqttKey: "Air_Flow",
             }

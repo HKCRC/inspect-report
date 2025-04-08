@@ -125,6 +125,7 @@ export default function IAQReport({ taskId }: IAQReportProps) {
             );
             if (currenTargetData) {
               currentShowData.push(currenTargetData);
+              console.error("currentShowData", currentShowData);
               setInspectImgView(currentShowData);
               setCurrentPhysicalData(currenTargetData);
             }
