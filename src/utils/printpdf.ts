@@ -32,6 +32,25 @@ export async function generatePDF(pdfName: string, callback?: () => void) {
     clonedSection.style.maxHeight = 'none';
     clonedSection.style.overflow = 'visible';
     
+    const imgElements = clonedSection.querySelectorAll('img');
+    imgElements.forEach(img => {
+      // 确保图片有宽高
+      if (!img.style.width) img.style.width = 'auto';
+      if (!img.style.height) img.style.height = 'auto';
+      
+      // 处理跨域问题
+      img.crossOrigin = 'anonymous';
+      
+      // 为所有图片添加额外的样式以确保可见性
+      img.style.maxWidth = '100%';
+      img.style.display = 'block';
+      
+      // 如果图片源是相对路径，转换为绝对路径
+      if (img.src && !img.src.startsWith('http') && !img.src.startsWith('data:')) {
+        img.src = new URL(img.src, window.location.origin).href;
+      }
+    });
+
     // 6. 确保所有子元素都可见
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error

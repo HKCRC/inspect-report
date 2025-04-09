@@ -188,9 +188,14 @@ export default function DataTable2({
                         getCurrentFloorImg(module)?.map((item, idx) => (
                           <img
                             key={idx}
-                            src={`${COS_URL}/${item.imgUrl}`}
+                            crossOrigin="anonymous"
+                            src={`${COS_URL}/${item.imgUrl}?date=${Date.now()}`}
                             alt="Floor plan showing inspection point 2"
                             className="max-w-[300px]"
+                            style={{
+                              width: "300px",
+                              height: "auto",
+                            }}
                           />
                         ))
                       ) : (
