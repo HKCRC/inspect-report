@@ -67,7 +67,7 @@ export default function DataTable2({
   return (
     <section className="min-h-screen bg-white" data-module="printableTable">
       <div className="max-w-[1200px] mx-auto py-8">
-        <div className="py-10">
+        <div className="py-6">
           <div
             id="printableTable"
             className="w-full min-w-[1035px] px-14 py-6 text-gray-800"
@@ -191,9 +191,9 @@ export default function DataTable2({
                             crossOrigin="anonymous"
                             src={`${COS_URL}/${item.imgUrl}?date=${Date.now()}`}
                             alt="Floor plan showing inspection point 2"
-                            className="max-w-[300px]"
+                            className="max-w-[250px]"
                             style={{
-                              width: "300px",
+                              width: "250px",
                               height: "auto",
                             }}
                           />
