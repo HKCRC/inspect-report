@@ -141,3 +141,20 @@ export interface AfterCalculatedData {
   range: SENSOR_LEVEL | undefined;
   title: string;
 }
+
+
+export interface IAQDataTableType {
+  measurement: string;
+  excellentClass: string;
+  goodClass: string;
+  parameter: string;
+  qualified: string;
+}
+
+export interface EnvironmentalDataTableType {
+  mission: string;
+  excellentClass: string;
+  goodClass: string;
+  parameter: string;
+  qualified: string;
+}

@@ -1,19 +1,15 @@
 // overall information
 
 import { useEffect, useState } from "react";
-import { COS_URL, Task_Building_Config } from "../../constants";
+import { CHART_CATEGORY_CONFIG, COS_URL } from "../../constants";
 import {
   FloorConfigKey,
   IAQSingleData,
-  inspectItemOriginNode,
   Mode,
+  SENSOR_CHART_TYPE,
   TaskDetailResponseType,
 } from "../../types";
-import {
-  getFilteredParentObjects,
-  getYearMonthDay,
-  isAreaOrSpot,
-} from "../../utils";
+import { getYearMonthDay, isAreaOrSpot } from "../../utils";
 import { InspectAreaView } from "../inspect-area";
 
 export default function DataTable2({
@@ -26,42 +22,50 @@ export default function DataTable2({
   idx: number;
 }) {
   const { task } = data;
-  const [inspectItem, setInspectItem] = useState<
-    inspectItemOriginNode[] | undefined
-  >(undefined);
+  const [inspectItem, setInspectItem] = useState<string[] | undefined>(
+    undefined
+  );
   const getCurrentFloorImg = (module: IAQSingleData) => {
     const currentFloor = data.task.inspectImg[module.floor];
     const currentMode = isAreaOrSpot(module).mode;
-    if (currentMode === Mode.global) {
-      return currentFloor;
-    }
+    if (currentFloor?.length) {
+      if (currentMode === Mode.global) {
+        return currentFloor;
+      }
 
-    if (currentMode === Mode.area || currentMode === Mode.spot) {
-      return currentFloor.filter(
-        (item) => item[currentMode] === module[currentMode]
-      );
+      if (currentMode === Mode.area || currentMode === Mode.spot) {
+        if (currentFloor.length)
+          return currentFloor.filter(
+            (item) => item[currentMode] === module[currentMode]
+          );
+      }
     }
-  };
-
-  const getProjectItems = (inspectItem: string[]) => {
-    if (inspectItem) {
-      const getInspectItems: inspectItemOriginNode[] = getFilteredParentObjects(
-        inspectItem,
-        Task_Building_Config
-      );
-
-      return getInspectItems;
-    }
+    return [];
   };
 
   useEffect(() => {
     if (task?.inspectItem) {
-      setInspectItem(getProjectItems(task?.inspectItem));
+      const inspectType = [];
+      const iaq = CHART_CATEGORY_CONFIG[
+        SENSOR_CHART_TYPE["IAQ Parameters"]
+      ].filter((item) => module[item.key as keyof IAQSingleData]);
+      if (iaq.length) {
+        inspectType.push("IAQ");
+      }
+
+      CHART_CATEGORY_CONFIG[SENSOR_CHART_TYPE["Other Parameters"]]
+        .concat(CHART_CATEGORY_CONFIG[SENSOR_CHART_TYPE["Physical Parameters"]])
+        .map((item) => {
+          if (module[item.key as keyof IAQSingleData]) {
+            inspectType.push(item.measurementItems);
+          }
+        });
+      setInspectItem(inspectType);
     }
-  }, [task?.inspectItem]);
+  }, [module, task?.inspectItem]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <section className="min-h-screen bg-white" data-module="printableTable">
       <div className="max-w-[1200px] mx-auto py-8">
         <div className="py-10">
           <div
@@ -71,7 +75,7 @@ export default function DataTable2({
             {idx === 0 ? (
               <div id="reprot_tile">
                 <h1 className="text-4xl font-medium">
-                  {task?.inspectArea?.join(", ")} -Parking Area <br />{" "}
+                  {task?.inspectArea?.join(", ")} - Parking Area <br />{" "}
                   Environment Repot
                 </h1>
 
@@ -147,7 +151,7 @@ export default function DataTable2({
                       </td>
                     ) : null}
                     <td className="border border-[#666666] p-3 text-center">
-                      {item?.value}
+                      {item}
                     </td>
                     {index === 0 ? (
                       <td
@@ -180,13 +184,18 @@ export default function DataTable2({
                 <tr>
                   <td colSpan={3} className="border border-[#666666] p-3">
                     <div className="flex gap-4">
-                      {getCurrentFloorImg(module)?.map((item) => (
-                        <img
-                          src={`${COS_URL}/${item.imgUrl}`}
-                          alt="Floor plan showing inspection point 2"
-                          className="max-w-[300px]"
-                        />
-                      ))}
+                      {getCurrentFloorImg(module).length ? (
+                        getCurrentFloorImg(module)?.map((item, idx) => (
+                          <img
+                            key={idx}
+                            src={`${COS_URL}/${item.imgUrl}`}
+                            alt="Floor plan showing inspection point 2"
+                            className="max-w-[300px]"
+                          />
+                        ))
+                      ) : (
+                        <p>No data</p>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -195,6 +204,6 @@ export default function DataTable2({
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

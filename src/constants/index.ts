@@ -17,6 +17,7 @@ export const CHART_CATEGORY_CONFIG = {
             name: "Temperatre",
             unit: "°C",
             key: "temperature",
+            measurementItems: "Temperature",
             standard: {
                 Excellent: {
                     start: 20,
@@ -32,6 +33,7 @@ export const CHART_CATEGORY_CONFIG = {
             name: "Humidity",   
             unit: "%",
             key: "humidity",
+            measurementItems: "R.Humidity",
             standard: {
                 Excellent: {
                     start: 40,
@@ -47,6 +49,7 @@ export const CHART_CATEGORY_CONFIG = {
             name: "Air Flow",
             unit: "m³/s",
             key: "airflow",
+            measurementItems: "Air Flow",
             standard: {
                 Excellent: {
                     start: 0.05,
@@ -64,6 +67,7 @@ export const CHART_CATEGORY_CONFIG = {
             name: "CO2",
             unit: "mg/m³",
             key: "co2",
+            measurementItems: "Carbon Dioxide (mg/m3)",
             standard: {
                 Excellent: {
                     start: 0,
@@ -79,6 +83,7 @@ export const CHART_CATEGORY_CONFIG = {
             name: "CO",
             unit: "μg/m³",
             key: "co",
+            measurementItems: "Carbon Monoxide (μg/m3)",
             standard: {
                 [SENSOR_LEVEL.Excellent]: {
                     start: 0,
@@ -94,12 +99,14 @@ export const CHART_CATEGORY_CONFIG = {
             name: "PM2.5",
             unit: "μg/m³",
             key: "pm2_5",
+            measurementItems: "PM2.5 (μg/m3)",
             standard: undefined
         },
         {
             name: "PM10",
             unit: "μg/m³",
             key: "pm10",
+            measurementItems: "Respirable Suspended Particulates PM10 (μg/m³)",
             standard: {
                 [SENSOR_LEVEL.Excellent]: {
                     start: 0,
@@ -115,6 +122,7 @@ export const CHART_CATEGORY_CONFIG = {
             name: "NO2",
             unit: "μg/m³",
             key: "no2",
+            measurementItems: "Nitrogen Dioxide (ppbv)",
             standard: {
                 [SENSOR_LEVEL.Excellent]: {
                     start: 0,
@@ -130,6 +138,7 @@ export const CHART_CATEGORY_CONFIG = {
             name: "O3",
             unit: "μg/m³",
             key: "o3",
+            measurementItems: "Ozone (ppbv)",
             standard: {
                 [SENSOR_LEVEL.Excellent]: {
                     start: 0,
@@ -145,6 +154,7 @@ export const CHART_CATEGORY_CONFIG = {
             name: "HCHO",
             unit: "μg/m³",
             key: "hcho",
+            measurementItems: "Formaldehyde (ppbv)",
             standard: {
                 [SENSOR_LEVEL.Excellent]: {
                     start: 0,
@@ -160,6 +170,7 @@ export const CHART_CATEGORY_CONFIG = {
             name: "TVOC",
             unit: "μg/m³",
             key: "tvoc",
+            measurementItems: "Total Volatile Organic Compounds (ppbv)",
             standard: {
                 [SENSOR_LEVEL.Excellent]: {
                     start: 0,
@@ -175,6 +186,7 @@ export const CHART_CATEGORY_CONFIG = {
             name: "Rn",
             unit: "Bq/m³",
             key: "rn",
+            measurementItems: "Radon (Bq/m³)",
             standard: {
                 [SENSOR_LEVEL.Excellent]: {
                     start: 0,
@@ -193,6 +205,7 @@ export const CHART_CATEGORY_CONFIG = {
             name: "Lux Level",
             unit: "Avg",
             key: "lux",
+            measurementItems: "Lux",
             standard: {
                 [SENSOR_LEVEL.Excellent]: {
                     start: 300,
@@ -208,6 +221,7 @@ export const CHART_CATEGORY_CONFIG = {
             name: "Noise Level",
             unit: "dB",
             key: "noise",
+            measurementItems: "Noise",
             standard: {
                 [SENSOR_LEVEL.Excellent]: {
                     start: 0,

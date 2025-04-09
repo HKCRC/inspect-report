@@ -54,7 +54,7 @@ export const InspectAreaView = ({
           const currentSpot = currentFloor.spot.filter(
             (item) => parseInt(item.value) === spot
           );
-          console.error("currentSpot", currentSpot);
+
           return {
             url: currentSpot[0].imgUrl,
           };

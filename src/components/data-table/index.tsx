@@ -1,128 +1,81 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import {
+  EnvironmentalDataTableType,
+  IAQDataTableType,
+  IAQSingleData,
+  SENSOR_CHART_TYPE,
+  TaskDetailResponseType,
+} from "../../types";
+import { calculateHeightInChart, isAreaOrSpot } from "../../utils";
+import { CHART_CATEGORY_CONFIG } from "../../constants";
 
-// Indoor Air Quality data for the first table
-const iaqData = [
-  {
-    measurement: "Carbon Dioxide (ppmv)",
-    excellentClass: "800",
-    goodClass: "1000",
-    parameter: "502",
-    qualified: "Excellent",
-  },
-  {
-    measurement: "Carbon Monoxide (ppmv)",
-    excellentClass: "1.7",
-    goodClass: "6.1",
-    parameter: "1",
-    qualified: "Excellent",
-  },
-  {
-    measurement: "Respirable Suspended Particulates PM10 (ng/m³)",
-    excellentClass: "20",
-    goodClass: "100",
-    parameter: "6",
-    qualified: "Excellent",
-  },
-  {
-    measurement: "Ozone (ppbv)",
-    excellentClass: "25",
-    goodClass: "61",
-    parameter: "26",
-    qualified: "Excellent",
-  },
-  {
-    measurement: "Total Volatile Organic Compounds (ppbv)",
-    excellentClass: "87",
-    goodClass: "261",
-    parameter: "20",
-    qualified: "Excellent",
-  },
-  {
-    measurement: "Radon (Bq/m³)",
-    excellentClass: "150",
-    goodClass: "167",
-    parameter: "49",
-    qualified: "Excellent",
-  },
-  {
-    measurement: "Nitrogen Dioxide (ppbv)",
-    excellentClass: "21",
-    goodClass: "80",
-    parameter: "60",
-    qualified: "Good",
-  },
-  {
-    measurement: "Nitrogen Dioxide (ppbv) [1-hour]",
-    excellentClass: "53",
-    goodClass: "106",
-    parameter: "107",
-    qualified: "Exceed",
-  },
-  {
-    measurement: "Formaldehyde (ppbv)",
-    excellentClass: "24",
-    goodClass: "81",
-    parameter: "30",
-    qualified: "Good",
-  },
-  {
-    measurement: "Formaldehyde (ppbv) [30-minute]",
-    excellentClass: "57",
-    goodClass: "81",
-    parameter: "56",
-    qualified: "Excellent",
-  },
-  {
-    measurement: "Airborne Bacteria (CFU/m³)",
-    excellentClass: "500",
-    goodClass: "1000",
-    parameter: "64",
-    qualified: "Excellent",
-  },
-];
+type DataTableProps = {
+  data: TaskDetailResponseType;
+  module: IAQSingleData;
+  idx: number;
+};
 
-// Environmental data for the second table
-const environmentalData = [
-  {
-    mission: "Lux",
-    excellentClass: "300 ≤ Avg ≤ 500",
-    goodClass: "200 ≤ Avg < 300 or 500 < Avg ≤800",
-    parameter: "600",
-    qualified: "Good",
-  },
-  {
-    mission: "Noise",
-    excellentClass: "dB ≤ 35",
-    goodClass: "35 < dB ≤ 45",
-    parameter: "30",
-    qualified: "Excellent",
-  },
-  {
-    mission: "Temperature",
-    excellentClass: "20 ≤ °C ≤ 23",
-    goodClass: "19 ≤ °C <20 or 23 < °C ≤ 24",
-    parameter: "22",
-    qualified: "Excellent",
-  },
-  {
-    mission: "R. Humidity",
-    excellentClass: "40 ≤ % ≤ 60",
-    goodClass: "30 ≤% < 40 or 60 <% ≤ 70",
-    parameter: "50",
-    qualified: "Excellent",
-  },
-  {
-    mission: "Air Flow",
-    excellentClass: "0.08 ≤ m/s ≤ 0.10",
-    goodClass: "0. 05≤m/s < 0.08 or 0.10 <m/s ≤ 0.15",
-    parameter: "0.09",
-    qualified: "Excellent",
-  },
-];
+const DataTable = ({ module }: DataTableProps) => {
+  const [iaqData, setIaqData] = useState<IAQDataTableType[]>([]);
+  const [environmentalData, setEnvironmentalData] = useState<
+    EnvironmentalDataTableType[]
+  >([]);
 
-const DataTable = () => {
+  const collectIAQData = () => {
+    const data: IAQDataTableType[] = [];
+    CHART_CATEGORY_CONFIG[SENSOR_CHART_TYPE["IAQ Parameters"]].map((item) => {
+      if (module[item.key as keyof IAQSingleData] && item.standard) {
+        const currentItem = module[item.key as keyof IAQSingleData];
+        const { range } = calculateHeightInChart(
+          Number(currentItem),
+          [item.standard.Excellent.start, item.standard.Excellent.end],
+          [item.standard.Good.start, item.standard.Good.end],
+          ""
+        );
+        data.push({
+          measurement: item.measurementItems,
+          excellentClass: item?.standard.Excellent.end.toString(),
+          goodClass: item.standard.Good.end.toString(),
+          parameter: currentItem.toString(),
+          qualified: range,
+        });
+      }
+    });
+    setIaqData(data);
+  };
+
+  const collectEnvironmentalData = () => {
+    const data: EnvironmentalDataTableType[] = [];
+    CHART_CATEGORY_CONFIG[SENSOR_CHART_TYPE["Other Parameters"]]
+      .concat(CHART_CATEGORY_CONFIG[SENSOR_CHART_TYPE["Physical Parameters"]])
+      .map((item) => {
+        if (module[item.key as keyof IAQSingleData] && item.standard) {
+          const currentItem = module[item.key as keyof IAQSingleData];
+          const { range } = calculateHeightInChart(
+            Number(currentItem),
+            [item.standard.Excellent.start, item.standard.Excellent.end],
+            [item.standard.Good.start, item.standard.Good.end],
+            ""
+          );
+          data.push({
+            mission: item.measurementItems,
+            excellentClass: `${item.standard.Excellent.start} ≤ ${item.unit} ≤ ${item.standard.Excellent.end}`,
+            goodClass: `${item.standard.Good.start} ≤ ${item.unit} < ${item.standard.Good.end} or ${item.standard.Good.end} < ${item.unit} ≤ ${item.standard.Excellent.end}`,
+            parameter: currentItem.toString(),
+            qualified: range,
+          });
+        }
+      });
+    setEnvironmentalData(data);
+  };
+
+  useEffect(() => {
+    collectIAQData();
+    collectEnvironmentalData();
+  }, [module]);
+
   return (
-    <div className="min-h-screen bg-white">
+    <section className="min-h-screen bg-white" data-module="printableTable">
       <div className="max-w-[1200px] mx-auto py-8">
         <div>
           <div
@@ -134,28 +87,30 @@ const DataTable = () => {
               <h1 className="font-medium text-2xl">Section Detail</h1>
             </div>
 
-            <div className="my-8">
-              <h2 className="text-left font-medium text-lg mb-4">Point 1</h2>
+            <div className="mt-8 mb-20">
+              <h2 className="text-left font-medium text-lg mb-4">
+                {module.floor}F, {isAreaOrSpot(module).str}
+              </h2>
 
               <table className="w-full border-collapse">
                 <thead>
                   <tr>
-                    <th className="border border-gray-300 bg-gray-100 p-3 text-left font-medium">
+                    <th className="border border-[#666666] bg-[#D8D8D8] p-3 text-center font-medium">
                       Inspect Mission
                     </th>
-                    <th className="border border-gray-300 bg-gray-100 p-3 text-left font-medium">
+                    <th className="border border-[#666666] bg-[#D8D8D8] p-3 text-center font-medium">
                       Measurement Items
                     </th>
-                    <th className="border border-gray-300 bg-gray-100 p-3 text-center font-medium">
+                    <th className="border border-[#666666] bg-[#D8D8D8] p-3 text-center font-medium">
                       Excellent Class
                     </th>
-                    <th className="border border-gray-300 bg-gray-100 p-3 text-center font-medium">
+                    <th className="border border-[#666666] bg-[#D8D8D8] p-3 text-center font-medium">
                       Good Class
                     </th>
-                    <th className="border border-gray-300 bg-gray-100 p-3 text-center font-medium">
+                    <th className="border border-[#666666] bg-[#D8D8D8] p-3 text-center font-medium">
                       Parameter
                     </th>
-                    <th className="border border-gray-300 bg-gray-100 p-3 text-center font-medium">
+                    <th className="border border-[#666666] bg-[#D8D8D8] p-3 text-center font-medium">
                       Qualified
                     </th>
                   </tr>
@@ -167,42 +122,42 @@ const DataTable = () => {
                         <tr>
                           <td
                             rowSpan={11}
-                            className="border border-gray-300 p-3 text-center font-medium align-middle"
+                            className="border border-[#666666] p-3 text-center text-xl lign-middle"
                           >
                             IAQ
                           </td>
-                          <td className="border border-gray-300 p-3">
+                          <td className="border border-[#666666] p-3 text-center">
                             {item.measurement}
                           </td>
-                          <td className="border border-gray-300 p-3 text-center">
+                          <td className="border border-[#666666] p-3 text-center">
                             {item.excellentClass}
                           </td>
-                          <td className="border border-gray-300 p-3 text-center">
+                          <td className="border border-[#666666] p-3 text-center">
                             {item.goodClass}
                           </td>
-                          <td className="border border-gray-300 p-3 text-center">
+                          <td className="border border-[#666666] p-3 text-center">
                             {item.parameter}
                           </td>
-                          <td className="border border-gray-300 p-3 text-center">
+                          <td className="border border-[#666666] p-3 text-center">
                             {item.qualified}
                           </td>
                         </tr>
                       )}
                       {index > 0 && (
                         <tr>
-                          <td className="border border-gray-300 p-3">
+                          <td className="border border-[#666666] p-3 text-center">
                             {item.measurement}
                           </td>
-                          <td className="border border-gray-300 p-3 text-center">
+                          <td className="border border-[#666666] p-3 text-center">
                             {item.excellentClass}
                           </td>
-                          <td className="border border-gray-300 p-3 text-center">
+                          <td className="border border-[#666666] p-3 text-center">
                             {item.goodClass}
                           </td>
-                          <td className="border border-gray-300 p-3 text-center">
+                          <td className="border border-[#666666] p-3 text-center">
                             {item.parameter}
                           </td>
-                          <td className="border border-gray-300 p-3 text-center">
+                          <td className="border border-[#666666] p-3 text-center">
                             {item.qualified}
                           </td>
                         </tr>
@@ -217,19 +172,19 @@ const DataTable = () => {
               <table className="w-full border-collapse">
                 <thead>
                   <tr>
-                    <th className="border border-gray-300 bg-gray-100 p-3 text-left font-medium">
+                    <th className="border border-[#666666] bg-[#D8D8D8] p-3 text-center font-medium">
                       Inspect Mission
                     </th>
-                    <th className="border border-gray-300 bg-gray-100 p-3 text-center font-medium">
+                    <th className="border border-[#666666] bg-[#D8D8D8] p-3 text-center font-medium">
                       Excellent Class
                     </th>
-                    <th className="border border-gray-300 bg-gray-100 p-3 text-center font-medium">
+                    <th className="border border-[#666666] bg-[#D8D8D8] p-3 text-center font-medium">
                       Good Class
                     </th>
-                    <th className="border border-gray-300 bg-gray-100 p-3 text-center font-medium">
+                    <th className="border border-[#666666] bg-[#D8D8D8] p-3 text-center font-medium">
                       Parameter
                     </th>
-                    <th className="border border-gray-300 bg-gray-100 p-3 text-center font-medium">
+                    <th className="border border-[#666666] bg-[#D8D8D8] p-3 text-center font-medium">
                       Qualified
                     </th>
                   </tr>
@@ -237,19 +192,19 @@ const DataTable = () => {
                 <tbody>
                   {environmentalData.map((item, index) => (
                     <tr key={index}>
-                      <td className="border border-gray-300 p-3 font-medium">
+                      <td className="border border-[#666666] p-3 text-center font-medium">
                         {item.mission}
                       </td>
-                      <td className="border border-gray-300 p-3 text-center">
+                      <td className="border border-[#666666] p-3 text-center">
                         {item.excellentClass}
                       </td>
-                      <td className="border border-gray-300 p-3 text-center">
+                      <td className="border border-[#666666] p-3 text-center">
                         {item.goodClass}
                       </td>
-                      <td className="border border-gray-300 p-3 text-center">
+                      <td className="border border-[#666666] p-3 text-center">
                         {item.parameter}
                       </td>
-                      <td className="border border-gray-300 p-3 text-center">
+                      <td className="border border-[#666666] p-3 text-center">
                         {item.qualified}
                       </td>
                     </tr>
@@ -260,7 +215,7 @@ const DataTable = () => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

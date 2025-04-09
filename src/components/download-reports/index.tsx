@@ -1,23 +1,30 @@
-import { useSearchParams } from "react-router-dom";
 import DataTable from "../data-table";
 import DataTable2 from "../data-table/index2";
 import { useEffect, useState } from "react";
-import { API_URL } from "../../constants";
 import { IAQSingleData, TaskDetailResponseType } from "../../types";
 import { Empty, message } from "antd";
+import { API_URL } from "../../constants";
+import { useSearchParams } from "react-router-dom";
 
-const DownloadReports = () => {
+interface DownloadReportsProps {
+  propsData?: TaskDetailResponseType | undefined;
+}
+
+const DownloadReports = ({ propsData }: DownloadReportsProps) => {
+  const [messageApi, contextHolder] = message.useMessage();
+  const [module, setModule] = useState<IAQSingleData[]>([]);
   const [data, setData] = useState<TaskDetailResponseType | undefined>(
     undefined
   );
   const [searchParams] = useSearchParams();
-  const [messageApi, contextHolder] = message.useMessage();
-  //   const rtype = searchParams.get("rtype");
-  const [module, setModule] = useState<IAQSingleData[]>([]);
   const taskId = searchParams.get("taskId");
 
   useEffect(() => {
-    fetchData();
+    if (propsData) {
+      sliceToMultipleModules(propsData.data);
+    } else {
+      fetchData();
+    }
   }, []);
 
   const fetchData = async () => {
@@ -46,14 +53,14 @@ const DownloadReports = () => {
     return <Empty />;
   }
   return (
-    <div>
+    <div style={{ display: propsData ? "none" : "block" }}>
       {contextHolder}
       {module.map((module, idx) => {
         return (
-          <section id={idx.toString()} key={idx}>
+          <div id={idx.toString()} key={idx}>
             <DataTable2 data={data} module={module} idx={idx} />
-            <DataTable />
-          </section>
+            <DataTable data={data} module={module} idx={idx} />
+          </div>
         );
       })}
     </div>

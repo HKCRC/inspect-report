@@ -1,15 +1,17 @@
-import { Button } from "antd";
+import { Button, Spin } from "antd";
 import { inspectItemOriginNode, Task } from "../../types";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { getFilteredParentObjects } from "../../utils";
 import { TagsContainer } from "../tags-container";
 import { Task_Building_Config } from "../../constants";
+import { generatePDF } from "../../utils/printpdf";
 
 interface ReportHeaderProps {
   info: Task;
 }
 
 export default function ReportHeader({ info }: ReportHeaderProps) {
+  const [isFinished, setIsFinished] = useState(true);
   const renderProjectItems = useCallback((inspectItem: string[]) => {
     if (inspectItem) {
       const getInspectItems: inspectItemOriginNode[] = getFilteredParentObjects(
@@ -20,6 +22,13 @@ export default function ReportHeader({ info }: ReportHeaderProps) {
       return <TagsContainer inspectItems={getInspectItems} />;
     }
   }, []);
+
+  const createPDF = () => {
+    setIsFinished(false);
+    generatePDF("test", () => {
+      setIsFinished(true);
+    });
+  };
 
   return (
     <div data-module="header">
@@ -56,14 +65,17 @@ export default function ReportHeader({ info }: ReportHeaderProps) {
           </div>
         </div>
 
-        <Button
-          size="large"
-          type="primary"
-          style={{ backgroundColor: "#0052D9" }}
-          className="ml-4"
-        >
-          Report Download
-        </Button>
+        <Spin spinning={!isFinished} tip="Generating PDF...">
+          <Button
+            size="large"
+            type="primary"
+            style={{ backgroundColor: "#0052D9" }}
+            className="ml-4"
+            onClick={createPDF}
+          >
+            Report Download
+          </Button>
+        </Spin>
       </div>
     </div>
   );
