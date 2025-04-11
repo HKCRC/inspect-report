@@ -230,7 +230,7 @@ export default function IAQReport({ taskId }: IAQReportProps) {
                   </div>
                 </div>
 
-                {taskData?.inspectImg.length && currentFloor ? (
+                {taskData?.inspectImg && currentFloor ? (
                   <div className="flex gap-2 w-11/12">
                     <div className="flex flex-col">
                       <p className="text-lg font-normal mb-2">
@@ -243,7 +243,7 @@ export default function IAQReport({ taskId }: IAQReportProps) {
                             ? `Area ${currentPhysicalData?.area}`
                             : `Floor ${currentPhysicalData?.floor}`)}
                       </p>
-                      {taskData?.inspectImg.length ? (
+                      {taskData?.inspectImg ? (
                         <ImgCarousel
                           imgData={
                             taskData?.inspectImg[
