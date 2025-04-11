@@ -38,11 +38,11 @@ export const InspectAreaView = ({
 
         const currentFloor = Floor_Config[floor];
         currentFloorUrl = floor;
-        if (spot !== 0) {
+        if (spot && spot !== 0) {
           mode = Mode.spot;
         }
 
-        if (area !== 0) {
+        if (area && area !== 0) {
           mode = Mode.area;
           const currentArea = currentFloor.area.filter(
             (item) => parseInt(item.value) === area
@@ -50,7 +50,7 @@ export const InspectAreaView = ({
           return {
             url: currentArea[0].imgUrl,
           };
-        } else if (spot !== 0) {
+        } else if (spot && spot !== 0) {
           const currentSpot = currentFloor.spot.filter(
             (item) => parseInt(item.value) === spot
           );
@@ -65,17 +65,16 @@ export const InspectAreaView = ({
         }
       });
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      if (mode === Mode.spot) {
-        currentShowArea.unshift({
-          url: Floor_Config[currentFloorUrl as FloorConfigKey].imgUrl,
-        });
-      } else {
+      if (mode === Mode.global) {
         currentShowArea.push({
           url: Floor_Config[currentFloorUrl as FloorConfigKey].mask,
         });
       }
+
+      currentShowArea.unshift({
+        url: Floor_Config[currentFloorUrl as FloorConfigKey].imgUrl,
+      });
+
       setCurrentShowArea(currentShowArea);
     }
   }, [currentShowAreaStore, currentShowAreaStoreForProps]);

@@ -1,4 +1,13 @@
-import { Button, Checkbox, Col, Divider, message, Popover, Row } from "antd";
+import {
+  Button,
+  Checkbox,
+  Col,
+  Divider,
+  Empty,
+  message,
+  Popover,
+  Row,
+} from "antd";
 import { Chart } from "../../../components/chart";
 import PhysicalInfo from "../../../components/physical-info";
 import ReportHeader from "../../../components/report-header";
@@ -89,9 +98,9 @@ export default function IAQReport({ taskId }: IAQReportProps) {
 
   const initFirstIAQData = (originData: IAQSingleData) => {
     let key = `Floor${originData.floor}`;
-    if (originData.spot !== 0) {
+    if (originData.spot && originData.spot !== 0) {
       key = `Spot${originData.spot}`;
-    } else if (originData.area !== 0) {
+    } else if (originData.area && originData.area !== 0) {
       key = `Area${originData.area}`;
     } else {
       key = `Floor${originData.floor}`;
@@ -155,12 +164,12 @@ export default function IAQReport({ taskId }: IAQReportProps) {
     selectCurrentFloorAreaOrSpot(setInSpectCheckData);
   };
 
-  const showSpotOrArea = (floor: number, spot: number, area: number) => {
-    if (spot !== 0) {
+  const showSpotOrArea = (floor: number, spot?: number, area?: number) => {
+    if (spot && spot !== 0) {
       return `Spot${spot}`;
     }
 
-    if (area !== 0) {
+    if (area && area !== 0) {
       return `Area${area}`;
     }
 
@@ -208,35 +217,43 @@ export default function IAQReport({ taskId }: IAQReportProps) {
                   <div className="flex flex-col w-11/12">
                     <p className="text-lg font-normal mb-3">
                       Inspection{" "}
-                      {currentPhysicalData?.spot !== 0
-                        ? `Spot`
-                        : currentPhysicalData?.area !== 0
-                        ? `Area`
-                        : `Floor`}{" "}
+                      {currentPhysicalData &&
+                        (currentPhysicalData?.spot !== 0
+                          ? `Spot`
+                          : currentPhysicalData &&
+                            currentPhysicalData?.area !== 0
+                          ? `Area`
+                          : `Floor`)}{" "}
                       Location
                     </p>
                     <InspectAreaView />
                   </div>
                 </div>
 
-                {taskData?.inspectImg && currentFloor ? (
+                {taskData?.inspectImg.length && currentFloor ? (
                   <div className="flex gap-2 w-11/12">
                     <div className="flex flex-col">
                       <p className="text-lg font-normal mb-2">
-                        Field Photo-{" "}
-                        {currentPhysicalData?.spot !== 0
-                          ? `Spot ${currentPhysicalData?.spot}`
-                          : currentPhysicalData?.area !== 0
-                          ? `Area ${currentPhysicalData?.area}`
-                          : `Floor ${currentPhysicalData?.floor}`}
+                        Field Photo
+                        {currentPhysicalData &&
+                          (currentPhysicalData?.spot !== 0
+                            ? `Spot ${currentPhysicalData?.spot}`
+                            : currentPhysicalData &&
+                              currentPhysicalData?.area !== 0
+                            ? `Area ${currentPhysicalData?.area}`
+                            : `Floor ${currentPhysicalData?.floor}`)}
                       </p>
-                      <ImgCarousel
-                        imgData={
-                          taskData?.inspectImg[
-                            parseInt(currentFloor.replace("tab", ""))
-                          ]
-                        }
-                      />
+                      {taskData?.inspectImg.length ? (
+                        <ImgCarousel
+                          imgData={
+                            taskData?.inspectImg[
+                              parseInt(currentFloor.replace("tab", ""))
+                            ]
+                          }
+                        />
+                      ) : (
+                        <Empty description="No Field Photo" />
+                      )}
                     </div>
                   </div>
                 ) : null}

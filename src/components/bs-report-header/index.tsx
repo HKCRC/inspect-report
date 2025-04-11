@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, message } from "antd";
 import { TaskDetailResponseType } from "../../types";
 
 type BsReportHeaderProps = {
@@ -10,8 +10,10 @@ export default function BsReportHeader({
   taskTime,
   taskFloor,
 }: BsReportHeaderProps) {
+  const [messageApi, contextHolder] = message.useMessage();
   return (
     <div data-module="header">
+      {contextHolder}
       <div className="flex items-start pt-8 justify-between">
         <div
           data-module="header-info"
@@ -47,6 +49,9 @@ export default function BsReportHeader({
         <Button
           color="primary"
           variant="outlined"
+          onClick={() => {
+            messageApi.info("Will be supported soon");
+          }}
           style={{
             borderRadius: "50px",
             color: "#0052D9",

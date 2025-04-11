@@ -45,7 +45,7 @@ export function calculateHeightInChart(y: number, excellentRange: number[], good
 
     return {
         renderedValue: Number(renderedValue.toFixed(2)), // 保留两位小数
-        originalValue: y,
+        originalValue: Number(y.toFixed(2)),
         range: currentRange ?? undefined  as SENSOR_LEVEL | undefined,
         title
     };
@@ -94,10 +94,10 @@ export function getFilteredParentObjects(backendIds: string[], config: inspectIt
         spot: module.spot,
         str: "",
     }
-    if (module.area !== 0) {
+    if (module.area && module.area !== 0) {
         info.str = `Area ${module.area}`
         info.mode = Mode.area
-    } else if (module.spot !== 0) {
+    } else if (module.spot && module.spot !== 0) {
         info.str = `Point ${module.spot}`;
         info.mode = Mode.spot
     } else {

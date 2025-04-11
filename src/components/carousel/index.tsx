@@ -61,7 +61,7 @@ export const ImgCarousel = ({ imgData }: ImgCarouselProps) => {
         arrows
         infinite={true}
       >
-        {imgData.map((item) => (
+        {imgData?.map((item) => (
           <div className="w-full">
             <img className="w-full" src={`${COS_URL}/${item.imgUrl}`} />
           </div>

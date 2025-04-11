@@ -5,6 +5,8 @@ import { ScrollableTabs } from "../../scroll-tab";
 import { API_URL } from "../../../constants";
 import { message } from "antd";
 import { BsSingleData, TaskDetailResponseType } from "../../../types";
+import reportImg from "../../../assets/image/组 388@1.5x.jpg";
+import { useSearchParams } from "react-router-dom";
 
 interface BSReportProps {
   taskId: string;
@@ -20,6 +22,10 @@ export default function BSReport({ taskId }: BSReportProps) {
   const [floorBsDataCollection, setFloorBsDataCollection] = useState<
     Record<number, BsSingleData[]>
   >({});
+  const [searchParams] = useSearchParams();
+  const structureId = searchParams.get("structureId");
+  const token = searchParams.get("token");
+  const bundleId = searchParams.get("bundleId");
 
   const handleTabChange = (tabId: string | number) => {
     setCurrentFloor(tabId.toString());
@@ -39,6 +45,15 @@ export default function BSReport({ taskId }: BSReportProps) {
       messageApi.error("Failed to fetch data");
       console.error(error);
     }
+  };
+
+  const gotoReportUrl = () => {
+    if (!structureId || !token || !bundleId) {
+      messageApi.error("missing params");
+      return;
+    }
+    const url = `http://space.cybergeo.cn:7796/#/cyberSpace/cyber/space?openPage=dualScreen&structureId=${structureId}&token=${token}&bundleId=${bundleId}`;
+    window.open(url, "_blank");
   };
 
   const setBsDataOrgin = (data: TaskDetailResponseType["data"]) => {
@@ -91,6 +106,21 @@ export default function BSReport({ taskId }: BSReportProps) {
                 currentFloor={currentFloor || undefined}
               />
             ) : null}
+          </div>
+          <div className="mt-15 mb-8 gap-4 px-8">
+            <div>
+              <p className="text-md font-blob">Section Detail</p>
+              <p className="text-[#3D3D3D] opacity-60 text-sm mt-1">
+                Detection Area
+              </p>
+            </div>
+
+            <img
+              src={reportImg}
+              onClick={gotoReportUrl}
+              className="w-full rounded-lg mt-5"
+              alt="section detail"
+            />
           </div>
         </div>
       </div>

@@ -41,9 +41,9 @@ export const Chart = ({
     dataArray.forEach((dataItem) => {
       const currentFloor = dataItem.floor;
       let key = `Floor ${currentFloor}`;
-      if (dataItem.area !== 0) {
+      if (dataItem.area && dataItem.area !== 0) {
         key = `Area ${dataItem.area}`;
-      } else if (dataItem.spot !== 0) {
+      } else if (dataItem.spot && dataItem.spot !== 0) {
         key = `Spot ${dataItem.spot}`;
       } else {
         key = `Floor ${currentFloor}`;
