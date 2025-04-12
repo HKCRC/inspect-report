@@ -1,13 +1,79 @@
 import { Mode, SENSOR_CHART_TYPE, SENSOR_LEVEL } from "../types";
-import floorPng from "../assets/area/floor.png";
-import cover1Png from "../assets/area/allcover.png";
-import cover2Png from "../assets/area/cover1.png";
-import cover3Png from "../assets/area/cover2.png";
-import cover4Png from "../assets/area/cover3.png";
-import cover5Png from "../assets/area/cover4.png";
-import point1Png from "../assets/area/point1.png";
-import point2Png from "../assets/area/point2.png";
-import point3Png from "../assets/area/point3.png";
+
+
+import floor1F from "../assets/laywer_data/1F/floor_1F.png";
+import floor2F from "../assets/laywer_data/2F/floor_2F.png";
+import floor3F from "../assets/laywer_data/3F/floor_3F.png";
+import floor3FM from "../assets/laywer_data/3FM/floor_3FM.png";
+import floor4F from "../assets/laywer_data/4F/floor_4F.png";
+import floor5F from "../assets/laywer_data/5F/floor_5F.png";
+import floor6F from "../assets/laywer_data/6F/floor_6F.png";
+import floor7F from "../assets/laywer_data/7F/floor_7F.png";
+import floor8F from "../assets/laywer_data/8F/floor_8F.png";
+
+import Point1 from "../assets/area/point1.png";
+import Point2 from "../assets/area/point2.png";
+import Point3 from "../assets/area/point3.png";
+
+
+import floor1FMask from "../assets/laywer_data/1F/1F coverall.png";
+import floor2FMask from "../assets/laywer_data/2F/2F coverall.png";
+import floor3FMask from "../assets/laywer_data/3F/3F coverall.png";
+import floor3FMMask from "../assets/laywer_data/3FM/3FM coverall.png";
+import floor4FMask from "../assets/laywer_data/4F/4F coverall.png";
+import floor5FMask from "../assets/laywer_data/5F/5F coverall.png";
+import floor6FMask from "../assets/laywer_data/6F/6F coverall.png";
+import floor7FMask from "../assets/laywer_data/7F/7F coverall.png";
+import floor8FMask from "../assets/laywer_data/8F/8F coverall.png";
+
+
+import floor1Area1 from "../assets/laywer_data/1F/1F cover1.png";
+import floor1Area2 from "../assets/laywer_data/1F/1F cover2.png";
+import floor1Area3 from "../assets/laywer_data/1F/1F cover3.png";
+import floor1Area4 from "../assets/laywer_data/1F/1F cover4.png";
+
+import floor2Area1 from "../assets/laywer_data/2F/2F cover1.png";
+import floor2Area2 from "../assets/laywer_data/2F/2F cover2.png";
+import floor2Area3 from "../assets/laywer_data/2F/2F cover3.png";
+import floor2Area4 from "../assets/laywer_data/2F/2F cover4.png";
+
+import floor3Area1 from "../assets/laywer_data/3F/3F cover1.png";
+import floor3Area2 from "../assets/laywer_data/3F/3F cover2.png";
+import floor3Area3 from "../assets/laywer_data/3F/3F cover3.png";
+import floor3Area4 from "../assets/laywer_data/3F/3F cover4.png";
+
+import floor35Area1 from "../assets/laywer_data/3FM/3FM cover1.png";
+import floor35Area2 from "../assets/laywer_data/3FM/3FM cover2.png";
+
+
+import floor4Area1 from "../assets/laywer_data/4F/4F cover1.png";
+import floor4Area2 from "../assets/laywer_data/4F/4F cover2.png";
+import floor4Area3 from "../assets/laywer_data/4F/4F cover3.png";
+import floor4Area4 from "../assets/laywer_data/4F/4F cover4.png";
+
+import floor5Area1 from "../assets/laywer_data/5F/5F cover1.png";
+import floor5Area2 from "../assets/laywer_data/5F/5F cover2.png";
+import floor5Area3 from "../assets/laywer_data/5F/5F cover3.png";
+import floor5Area4 from "../assets/laywer_data/5F/5F cover4.png";
+
+import floor6Area1 from "../assets/laywer_data/6F/6F cover1.png";
+import floor6Area2 from "../assets/laywer_data/6F/6F cover2.png";
+import floor6Area3 from "../assets/laywer_data/6F/6F cover3.png";
+import floor6Area4 from "../assets/laywer_data/6F/6F cover4.png";
+
+import floor7Area1 from "../assets/laywer_data/7F/7F cover1.png";
+import floor7Area2 from "../assets/laywer_data/7F/7F cover2.png";
+import floor7Area3 from "../assets/laywer_data/7F/7F cover3.png";
+import floor7Area4 from "../assets/laywer_data/7F/7F cover4.png";
+
+import floor8Area1 from "../assets/laywer_data/8F/8F cover1.png";
+import floor8Area2 from "../assets/laywer_data/8F/8F cover2.png";
+import floor8Area3 from "../assets/laywer_data/8F/8F cover3.png";
+
+
+
+
+
 
 export const API_URL = "http://129.226.138.87:7002"
 
@@ -237,14 +303,16 @@ export const CHART_CATEGORY_CONFIG = {
 }
 
 
+
+
 export const Floor_Config = {
     '1F': {
         id: "1F",
         key: "FLOOR_1F",
         value: "1",
         type: Mode.global,
-        imgUrl: floorPng,
-        mask: cover1Png,
+        imgUrl: floor1F,
+        mask: floor1FMask,
         map_virtual_height: 72,
         map_virtual_width: 86,
         offset: {
@@ -259,52 +327,52 @@ export const Floor_Config = {
                 key: "areaA",
                 type: Mode.area,
                 value: "1",
-                imgUrl: cover2Png,
+                imgUrl: floor1Area1,
             },
              {
                 id: "Area_02",
                 key: "areaB",
                 type: Mode.area,
                 value: "2",
-                imgUrl: cover3Png,
+                imgUrl: floor1Area2,
             },
             {
                 id: "Area_03",
                 key: "areaC",
                 type: Mode.area,
                 value: "3",
-                imgUrl: cover4Png,
+                imgUrl: floor1Area3,
             },
              {
                 id: "Area_04",
                 key: "areaD",
                 type: Mode.area,
                 value: "4",
-                imgUrl: cover5Png,
+                imgUrl: floor1Area4,
             },
         ],
         [Mode.spot]: [
             {
-                id: "1F",
+                id: "8F",
                 key: "spot1",
                 type: Mode.spot,
                 value: "1",
-                imgUrl: point1Png,
+                imgUrl: Point1,
             },
             {
-                id: "1F",
+                id: "8F",
                 key: "spot2",
                 type: Mode.spot,
                 value: "2",
-                imgUrl: point2Png,
+                imgUrl: Point2,  
             },
             {
-                id: "1F",
+                id: "8F",
                 key: "spot3",
                 type: Mode.spot,
                 value: "3",
-                imgUrl: point3Png,
-            },
+                imgUrl: Point3,
+            }
         ]
     },
     '2F': {
@@ -312,8 +380,8 @@ export const Floor_Config = {
         key: "FLOOR_2F",
         value: "2",
         type: Mode.global,
-        imgUrl: floorPng,
-        mask: cover1Png,
+        imgUrl: floor2F,
+        mask: floor2FMask,
         map_virtual_height: 72,
         map_virtual_width: 86,
         offset: {
@@ -328,61 +396,61 @@ export const Floor_Config = {
                 key: "areaA",
                 type: Mode.area,
                 value: "1",
-                imgUrl: cover2Png,
+                imgUrl: floor2Area1,
             },
              {
                 id: "Area_02",
                 key: "areaB",
                 type: Mode.area,
                 value: "2",
-                imgUrl: cover3Png,
+                imgUrl: floor2Area2,
             },
             {
                 id: "Area_03",
                 key: "areaC",
                 type: Mode.area,
                 value: "3",
-                imgUrl: cover4Png,
+                imgUrl: floor2Area3,
             },
              {
                 id: "Area_04",
                 key: "areaD",
                 type: Mode.area,
                 value: "4",
-                imgUrl: cover5Png,
+                imgUrl: floor2Area4,
             },
        ],
-       [Mode.spot]: [
-            {
-                id: "2F",
-                key: "spot1",
-                type: Mode.spot,
-                value: "1",
-                imgUrl: point1Png,
-            },
-            {
-                id: "2F",
-                key: "spot2",
-                type: Mode.spot,
-                value: "2",
-                imgUrl: point2Png,
-            },
-            {
-                id: "2F",
-                key: "spot3",
-                type: Mode.spot,
-                value: "3",
-                imgUrl: point3Png,
-            },
-        ]     
+       [Mode.spot]:[
+        {
+            id: "8F",
+            key: "spot1",
+            type: Mode.spot,
+            value: "1",
+            imgUrl: Point1,
+        },
+        {
+            id: "8F",
+            key: "spot2",
+            type: Mode.spot,
+            value: "2",
+            imgUrl: Point2,  
+        },
+        {
+            id: "8F",
+            key: "spot3",
+            type: Mode.spot,
+            value: "3",
+            imgUrl: Point3,
+        }
+    ]  
     },
     '3F': {
         id: "3F",
         key: "FLOOR_3F",
         value: "3",
         type: Mode.global,
-        imgUrl: floorPng,
-        mask: cover1Png,
+        imgUrl: floor3F,
+        mask: floor3FMask,
         map_virtual_height: 72,
         map_virtual_width: 86,
         offset: {
@@ -397,61 +465,117 @@ export const Floor_Config = {
                 key: "areaA",
                 type: Mode.area,
                 value: "1",
-                imgUrl: cover2Png,
+                imgUrl: floor3Area1,
             },
              {
                 id: "Area_02",
                 key: "areaB",
                 type: Mode.area,
                 value: "2",
-                imgUrl: cover3Png,
+                imgUrl: floor3Area2,
             },
             {
                 id: "Area_03",
                 key: "areaC",
                 type: Mode.area,
                 value: "3",
-                imgUrl: cover4Png,
+                imgUrl: floor3Area3,
             },
              {
                 id: "Area_04",
                 key: "areaD",
                 type: Mode.area,
                 value: "4",
-                imgUrl: cover5Png,
+                imgUrl: floor3Area4,
             },
        ],
-       [Mode.spot]: [
+       [Mode.spot]:[
+        {
+            id: "8F",
+            key: "spot1",
+            type: Mode.spot,
+            value: "1",
+            imgUrl: Point1,
+        },
+        {
+            id: "8F",
+            key: "spot2",
+            type: Mode.spot,
+            value: "2",
+            imgUrl: Point2,  
+        },
+        {
+            id: "8F",
+            key: "spot3",
+            type: Mode.spot,
+            value: "3",
+            imgUrl: Point3,
+        }
+    ]
+    },
+    '3.5F': {
+        id: "3.5F",
+        key: "FLOOR_3.5F",
+        value: "3.5",
+        type: Mode.global,
+        imgUrl: floor3FM,
+        mask: floor3FMMask,
+        map_virtual_height: 72,
+        map_virtual_width: 86,
+        offset: {
+            left: 159,
+            top: 87, 
+            right: 123,
+            bottom: 75,
+        },
+        [Mode.area]: [
             {
-                id: "3F",
-                key: "spot1",
-                type: Mode.spot,
+                id: "Area_01",
+                key: "areaA",
+                type: Mode.area,
                 value: "1",
-                imgUrl: point1Png,
+                imgUrl: floor35Area1,
             },
-            {
-                id: "3F",
-                key: "spot2",
-                type: Mode.spot,
+             {
+                id: "Area_02",
+                key: "areaB",
+                type: Mode.area,
                 value: "2",
-                imgUrl: point2Png,
+                imgUrl: floor35Area2,
             },
-            {
-                id: "3F",
-                key: "spot3",
-                type: Mode.spot,
-                value: "3",
-                imgUrl: point3Png,
-            },
-        ]
+
+       ],
+       [Mode.spot]:[
+        {
+            id: "8F",
+            key: "spot1",
+            type: Mode.spot,
+            value: "1",
+            imgUrl: Point1,
+        },
+        {
+            id: "8F",
+            key: "spot2",
+            type: Mode.spot,
+            value: "2",
+            imgUrl: Point2,  
+        },
+        {
+            id: "8F",
+            key: "spot3",
+            type: Mode.spot,
+            value: "3",
+            imgUrl: Point3,
+        }
+    ]
     },
     '4F': {
         id: "4F",
         key: "FLOOR_4F",
         value: "4",
         type: Mode.global,
-        imgUrl: floorPng,
-        mask: cover1Png,
+        imgUrl: floor4F,
+        mask: floor4FMask,
         map_virtual_height: 72,
         map_virtual_width: 86,
         offset: {
@@ -466,61 +590,61 @@ export const Floor_Config = {
                 key: "areaA",
                 type: Mode.area,
                 value: "1",
-                imgUrl: cover2Png,
+                imgUrl: floor4Area1,
             },
              {
                 id: "Area_02",
                 key: "areaB",
                 type: Mode.area,
                 value: "2",
-                imgUrl: cover3Png,
+                imgUrl: floor4Area2,
             },
             {
                 id: "Area_03",
                 key: "areaC",
                 type: Mode.area,
                 value: "3",
-                imgUrl: cover4Png,
+                imgUrl: floor4Area3,
             },
              {
                 id: "Area_04",
                 key: "areaD",
                 type: Mode.area,
                 value: "4",
-                imgUrl: cover5Png,
+                imgUrl: floor4Area4,
             },
        ],
        [Mode.spot]: [
-            {
-                id: "4F",
-                key: "spot1",
-                type: Mode.spot,
-                value: "1",
-                imgUrl: point1Png,      
-            },
-            {
-                id: "4F",
-                key: "spot2",
-                type: Mode.spot,
-                value: "2",
-                imgUrl: point2Png,  
-            },
-            {
-                id: "4F",
-                key: "spot3",
-                type: Mode.spot,
-                value: "3",
-                imgUrl: point3Png,  
-            },
-        ]
+        {
+            id: "8F",
+            key: "spot1",
+            type: Mode.spot,
+            value: "1",
+            imgUrl: Point1,
+        },
+        {
+            id: "8F",
+            key: "spot2",
+            type: Mode.spot,
+            value: "2",
+            imgUrl: Point2,  
+        },
+        {
+            id: "8F",
+            key: "spot3",
+            type: Mode.spot,
+            value: "3",
+            imgUrl: Point3,
+        }
+    ]
     },
     '5F': {
         id: "5F",
         key: "FLOOR_5F",
         value: "5",
         type: Mode.global,
-        imgUrl: floorPng,
-        mask: cover1Png,
+        imgUrl: floor5F,
+        mask: floor5FMask,
         map_virtual_height: 72,
         map_virtual_width: 86,
         offset: {
@@ -535,61 +659,61 @@ export const Floor_Config = {
                 key: "areaA",
                 type: Mode.area,
                 value: "1",
-                imgUrl: cover2Png,
+                imgUrl: floor5Area1,
             },
              {
                 id: "Area_02",
                 key: "areaB",
                 type: Mode.area,
                 value: "2",
-                imgUrl: cover3Png,
+                imgUrl: floor5Area2,
             },
             {
                 id: "Area_03",
                 key: "areaC",
                 type: Mode.area,
                 value: "3",
-                imgUrl: cover4Png,
+                imgUrl: floor5Area3,
             },
              {
                 id: "Area_04",
                 key: "areaD",
                 type: Mode.area,
                 value: "4",
-                imgUrl: cover5Png,
+                imgUrl: floor5Area4,
             },
        ],
        [Mode.spot]: [
-            {
-                id: "5F",
-                key: "spot1",
-                type: Mode.spot,
-                value: "1",
-                imgUrl: point1Png,
-            },
-            {
-                id: "5F",
-                key: "spot2",
-                type: Mode.spot,
-                value: "2",
-                imgUrl: point2Png,
-            },
-            {
-                id: "5F",
-                key: "spot3",
-                type: Mode.spot,
-                value: "3",
-                imgUrl: point3Png,
-            },
-        ]
+        {
+            id: "8F",
+            key: "spot1",
+            type: Mode.spot,
+            value: "1",
+            imgUrl: Point1,
+        },
+        {
+            id: "8F",
+            key: "spot2",
+            type: Mode.spot,
+            value: "2",
+            imgUrl: Point2,  
+        },
+        {
+            id: "8F",
+            key: "spot3",
+            type: Mode.spot,
+            value: "3",
+            imgUrl: Point3,
+        }
+    ]
     },
     '6F': {
         id: "6F",
         key: "FLOOR_6F",
         value: "6",
         type: Mode.global,
-        imgUrl: floorPng,
-        mask: cover1Png,
+        imgUrl: floor6F,
+        mask: floor6FMask,
         map_virtual_height: 72,
         map_virtual_width: 86,
         offset: {
@@ -604,61 +728,61 @@ export const Floor_Config = {
                key: "areaA",
                type: Mode.area,
                value: "1",
-               imgUrl: cover2Png,
+               imgUrl: floor6Area1,
            },
             {
                id: "Area_02",
                key: "areaB",
                type: Mode.area,
                value: "2",
-               imgUrl: cover3Png,
+               imgUrl: floor6Area2,
            },
            {
                id: "Area_03",
                key: "areaC",
                type: Mode.area,
                value: "3",
-               imgUrl: cover4Png,
+               imgUrl: floor6Area3,
            },
             {
                id: "Area_04",
                key: "areaD",
                type: Mode.area,
                value: "4",
-               imgUrl: cover5Png,
+               imgUrl: floor6Area4,
            },
        ],
        [Mode.spot]: [
-            {
-                id: "6F",
-                key: "spot1",
-                type: Mode.spot,
-                value: "1",
-                imgUrl: point1Png,
-            },
-            {
-                id: "6F",
-                key: "spot2",
-                type: Mode.spot,
-                value: "2", 
-                imgUrl: point2Png,
-            },
-            {
-                id: "6F",
-                key: "spot3",
-                type: Mode.spot,
-                value: "3", 
-                imgUrl: point3Png,
-            }
-        ]
+        {
+            id: "8F",
+            key: "spot1",
+            type: Mode.spot,
+            value: "1",
+            imgUrl: Point1,
+        },
+        {
+            id: "8F",
+            key: "spot2",
+            type: Mode.spot,
+            value: "2",
+            imgUrl: Point2,  
+        },
+        {
+            id: "8F",
+            key: "spot3",
+            type: Mode.spot,
+            value: "3",
+            imgUrl: Point3,
+        }
+    ]
     },
     '7F': {
         id: "7F",
         key: "FLOOR_7F",
         value: "7",
         type: Mode.global,
-        imgUrl: floorPng,
-        mask: cover1Png,
+        imgUrl: floor7F,
+        mask: floor7FMask,
         map_virtual_height: 72,
         map_virtual_width: 86,
         offset: {
@@ -673,61 +797,61 @@ export const Floor_Config = {
                key: "areaA",
                type: Mode.area,
                 value: "1",
-               imgUrl: cover2Png,
+               imgUrl: floor7Area1,
            },
             {
                id: "Area_02",
                key: "areaB",
                type: Mode.area,
                value: "2",
-               imgUrl: cover3Png,
+               imgUrl: floor7Area2,
            },
            {
                id: "Area_03",
                key: "areaC",
                type: Mode.area,
                value: "3",
-               imgUrl: cover4Png,
+               imgUrl: floor7Area3,
            },
             {
                id: "Area_04",
                key: "areaD",
                type: Mode.area,
                value: "4",
-               imgUrl: cover5Png,
+               imgUrl: floor7Area4,
            },
        ],
        [Mode.spot]: [
-            {
-                id: "7F",
-                key: "spot1",
-                type: Mode.spot,
-                value: "1", 
-                imgUrl: point1Png,
-            },
-            {
-                id: "7F",
-                key: "spot2",
-                type: Mode.spot,
-                value: "2", 
-                imgUrl: point2Png,
-            },
-            {
-                id: "7F",
-                key: "spot3",
-                type: Mode.spot,
-                value: "3", 
-                imgUrl: point3Png,
-            }
-        ]
+        {
+            id: "8F",
+            key: "spot1",
+            type: Mode.spot,
+            value: "1",
+            imgUrl: Point1,
+        },
+        {
+            id: "8F",
+            key: "spot2",
+            type: Mode.spot,
+            value: "2",
+            imgUrl: Point2,  
+        },
+        {
+            id: "8F",
+            key: "spot3",
+            type: Mode.spot,
+            value: "3",
+            imgUrl: Point3,
+        }
+    ]
     },
     '8F': {
         id: "8F",
         key: "FLOOR_8F",
         value: "8",
         type: Mode.global,
-        imgUrl: floorPng,
-        mask: cover1Png,
+        imgUrl: floor8F,
+        mask: floor8FMask,
         map_virtual_height: 72,
         map_virtual_width: 86,
         offset: {
@@ -742,28 +866,21 @@ export const Floor_Config = {
                 key: "areaA",
                 type: Mode.area,
                 value: "1",
-                imgUrl: cover2Png,
+                imgUrl: floor8Area1,
             },
              {
                 id: "Area_02",
                 key: "areaB",
                 type: Mode.area,
                 value: "2",
-                imgUrl: cover3Png,
+                imgUrl: floor8Area2,
             },
             {
                 id: "Area_03",
                 key: "areaC",
                 type: Mode.area,
                 value: "3",
-                imgUrl: cover4Png,
-            },
-             {
-                id: "Area_04",
-                key: "areaD",
-                type: Mode.area,
-                value: "4",
-                imgUrl: cover5Png,
+                imgUrl: floor8Area3,
             },
        ],
        [Mode.spot]: [
@@ -772,25 +889,26 @@ export const Floor_Config = {
                 key: "spot1",
                 type: Mode.spot,
                 value: "1",
-                imgUrl: point1Png,
+                imgUrl: Point1,
             },
             {
                 id: "8F",
                 key: "spot2",
                 type: Mode.spot,
                 value: "2",
-                imgUrl: point2Png,  
+                imgUrl: Point2,  
             },
             {
                 id: "8F",
                 key: "spot3",
                 type: Mode.spot,
                 value: "3",
-                imgUrl: point3Png,
+                imgUrl: Point3,
             }
         ]
     },
 }
+
 
 export const COS_URL = "https://inspect-hkcrc-1330283638.cos.ap-hongkong.myqcloud.com"
 

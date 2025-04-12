@@ -76,7 +76,7 @@ export default function BSReport({ taskId }: BSReportProps) {
 
   return (
     <main className="bg-[#DFECFF] min-h-screen">
-      <div className="max-w-[1035px] mx-auto p-8">
+      <div className="max-w-[1035px] mx-auto p-8" id="bs-report">
         <BsReportHeader
           taskTime={data?.task?.setTime || ""}
           taskFloor={data?.task?.inspectArea || []}

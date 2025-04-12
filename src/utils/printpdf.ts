@@ -1,6 +1,7 @@
 import html2canvas from 'html2canvas-pro';
 import jsPDF from 'jspdf';
 
+
 export async function generatePDF(pdfName: string, callback?: () => void) {
   // 1. 获取所有 section 元素
   const sections = document.querySelectorAll('section');

@@ -210,7 +210,7 @@ export default function IAQReport({ taskId }: IAQReportProps) {
           >
             <div className="px-8">
               <p className="text-3xl font-bold mb-5">
-                {taskData?.inspectArea.join(", ")}-Parking Area Map
+                {taskData?.inspectArea.join(", ")} - Parking Area Map
               </p>
               <div className="grid sm:grid-cols-2 grid-cols-1">
                 <div className="flex gap-2">
